@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>EcoCommute Pune - Map v1.2</title>
+    <meta name="description" content="EcoCommute Pune — Compare CO₂ emissions across transport modes for your Pune commute." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="shared.js"></script>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-fixed-variant": "#006a2d",
+                        "surface-container": "#e5e9eb",
+                        "inverse-primary": "#6bff8f",
+                        "tertiary-fixed-dim": "#73a2ff",
+                        "primary-fixed": "#6bff8f",
+                        "on-tertiary": "#f0f2ff",
+                        "on-secondary-fixed-variant": "#535b71",
+                        "surface-dim": "#d0d5d8",
+                        "on-secondary-fixed": "#373f54",
+                        "primary-fixed-dim": "#5bf083",
+                        "surface-bright": "#f5f7f9",
+                        "secondary": "#535b71",
+                        "on-background": "#2c2f31",
+                        "surface-tint": "#006a2d",
+                        "on-primary-container": "#005f28",
+                        "on-tertiary-fixed": "#00163b",
+                        "on-tertiary-container": "#002e6a",
+                        "tertiary": "#0057bd",
+                        "outline-variant": "#abadaf",
+                        "secondary-dim": "#484f65",
+                        "error-dim": "#b92902",
+                        "surface-variant": "#d9dde0",
+                        "surface-container-highest": "#d9dde0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#f0f2ff",
+                        "surface": "#f5f7f9",
+                        "inverse-surface": "#0b0f10",
+                        "on-error": "#ffefec",
+                        "primary": "#006a2d",
+                        "tertiary-container": "#8ab0ff",
+                        "inverse-on-surface": "#9a9d9f",
+                        "outline": "#747779",
+                        "secondary-fixed-dim": "#ccd4ee",
+                        "secondary-container": "#dae2fd",
+                        "background": "#f5f7f9",
+                        "on-secondary-container": "#4a5167",
+                        "tertiary-fixed": "#8ab0ff",
+                        "on-primary-fixed": "#004a1d",
+                        "primary-container": "#6bff8f",
+                        "error": "#b02500",
+                        "surface-container-low": "#eef1f3",
+                        "error-container": "#f95630",
+                        "on-surface": "#2c2f31",
+                        "secondary-fixed": "#dae2fd",
+                        "surface-container-high": "#dfe3e6",
+                        "on-tertiary-fixed-variant": "#00377b",
+                        "primary-dim": "#005d26",
+                        "tertiary-dim": "#004ca6",
+                        "on-error-container": "#520c00",
+                        "on-primary": "#ceffd0"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px", "3xl": "1.5rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #dcfce7;
+            border-radius: 9999px;
+        }
+
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #14532d;
+        }
+
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #dcfce7 transparent;
+        }
+
+        .dark .custom-scrollbar {
+            scrollbar-color: #14532d transparent;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-surface dark:bg-slate-900 font-body text-on-surface dark:text-slate-200 transition-colors duration-300 min-h-screen pb-32">
+
+    <header
+        class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 max-w-2xl mx-auto rounded-full mt-4 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-[0_12px_40px_rgba(44,47,49,0.06)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+        <div class="flex items-center gap-3">
+            <button
+                class="p-2 hover:bg-green-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-90 duration-200 flex items-center justify-center">
+                <span class="material-symbols-outlined text-green-600 dark:text-green-400">eco</span>
+            </button>
+            <span class="text-xl font-black tracking-tight text-green-700 dark:text-green-400 font-headline">EcoCommute
+                Pune</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="themeToggle"
+                class="p-2 hover:bg-green-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-90 duration-200">
+                <span class="material-symbols-outlined text-slate-500 dark:text-slate-400"
+                    id="themeIcon">dark_mode</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="pt-28 px-4 max-w-2xl mx-auto">
+        <div class="text-center mb-8">
+            <div
+                class="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-200 text-xs font-semibold px-4 py-1.5 rounded-full mb-4">
+                🌱 CEP Project — EcoCommute
+            </div>
+            <h1
+                class="text-4xl font-extrabold text-gray-900 dark:text-white leading-tight font-headline tracking-tight">
+                How green is<br />
+                <span class="text-green-600 dark:text-green-400">your commute?</span>
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mt-3">
+                Compare CO₂ emissions across transport modes in Pune
+            </p>
+        </div>
+
+        <div
+            class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-[0_20px_40px_-15px_rgba(0,106,45,0.1)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] p-6 transition-colors duration-300">
+            <div class="mb-4">
+                <label
+                    class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 block pl-2">From</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-green-500 font-bold text-sm">A</span>
+                    <input id="origin"
+                        class="w-full border-2 border-gray-100 dark:border-slate-700 rounded-full pl-10 pr-4 py-3.5 text-sm bg-gray-50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:border-green-400 dark:focus:border-green-500 outline-none transition-all dark:text-white"
+                        placeholder="e.g. Shivajinagar, Pune" />
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 mb-4 opacity-100 hover:scale-110 transition-transform justify-center">
+                <button
+                    onclick="const o=document.getElementById('origin').value; document.getElementById('origin').value=document.getElementById('dest').value; document.getElementById('dest').value=o;"
+                    class="w-10 h-10 rounded-full border-2 border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:border-green-300 transition-all">
+                    <span class="material-symbols-outlined text-[20px]">swap_vert</span>
+                </button>
+            </div>
+
+            <div class="mb-6">
+                <label
+                    class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 block pl-2">To</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-red-500 font-bold text-sm">B</span>
+                    <input id="dest"
+                        class="w-full border-2 border-gray-100 dark:border-slate-700 rounded-full pl-10 pr-4 py-3.5 text-sm bg-gray-50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:border-green-400 dark:focus:border-green-500 outline-none transition-all dark:text-white"
+                        placeholder="e.g. Hinjewadi Phase 1, Pune" />
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label
+                    class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 block pl-2">Transport
+                    Mode</label>
+                <div class="flex overflow-x-auto gap-2 pb-3 -mx-2 px-2 custom-scrollbar" id="mainCategories"></div>
+                <div class="mt-3 hidden" id="subCategoryContainer">
+                    <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-100 dark:border-slate-700/50"
+                        id="subCategories"></div>
+                </div>
+            </div>
+
+            <button id="calculateBtn" disabled
+                class="w-full bg-primary hover:bg-primary-dim text-white py-4 rounded-full font-headline font-bold text-[15px] shadow-[0_8px_20px_rgba(0,106,45,0.25)] dark:shadow-[0_8px_20px_rgba(107,255,143,0.15)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-2 opacity-50">
+                Loading Maps... <span class="material-symbols-outlined text-lg animate-spin">refresh</span>
+            </button>
+        </div>
+
+        <!-- Quick Routes -->
+        <div class="mt-8">
+            <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 px-2">Quick
+                Routes</p>
+            <div class="flex flex-col gap-3">
+                <button onclick="setQuickRoute('Shivajinagar, Pune', 'Hinjewadi Phase 1, Pune')"
+                    class="bg-white/60 dark:bg-slate-800/60 backdrop-blur rounded-3xl p-4 text-left hover:bg-white dark:hover:bg-slate-800 hover:shadow-sm transition-all border border-white/50 dark:border-slate-700 border-2 active:scale-[0.99]">
+                    <div class="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
+                        <div
+                            class="w-8 h-8 rounded-full bg-green-50 dark:bg-slate-700 flex items-center justify-center text-green-600 dark:text-green-400 flex-shrink-0">
+                            <span class="material-symbols-outlined text-[16px]">location_on</span>
+                        </div>
+                        <div class="font-medium truncate flex-1">
+                            Shivajinagar <span class="text-gray-400 dark:text-gray-500 mx-1">→</span> Hinjewadi Phase 1
+                        </div>
+                    </div>
+                </button>
+                <button onclick="setQuickRoute('Kothrud, Pune', 'Viman Nagar, Pune')"
+                    class="bg-white/60 dark:bg-slate-800/60 backdrop-blur rounded-3xl p-4 text-left hover:bg-white dark:hover:bg-slate-800 hover:shadow-sm transition-all border border-white/50 dark:border-slate-700 border-2 active:scale-[0.99]">
+                    <div class="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
+                        <div
+                            class="w-8 h-8 rounded-full bg-green-50 dark:bg-slate-700 flex items-center justify-center text-green-600 dark:text-green-400 flex-shrink-0">
+                            <span class="material-symbols-outlined text-[16px]">location_on</span>
+                        </div>
+                        <div class="font-medium truncate flex-1">
+                            Kothrud <span class="text-gray-400 dark:text-gray-500 mx-1">→</span> Viman Nagar
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <nav id="bottomNav"
+        class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 bg-white dark:bg-slate-900 rounded-t-[3rem] border-none shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.5)] transition-colors duration-300">
+    </nav>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        function syncIcon() {
+            themeIcon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
+        }
+        syncIcon();
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            syncIcon();
+        });
+
+        const transportModes = [
+            { id: 'car', icon: 'directions_car', label: 'Car', sub: [{ id: 'petrol', label: 'Petrol' }, { id: 'diesel', label: 'Diesel' }, { id: 'cng', label: 'CNG' }, { id: 'hybrid_petrol', label: 'Hybrid Petrol' }, { id: 'hybrid_plugin', label: 'Plug-in Hybrid' }, { id: 'electric', label: 'Electric' }] },
+            { id: 'two_wheeler', icon: 'two_wheeler', label: 'Bike', sub: [{ id: 'motorcycle_small', label: 'Motorcycle (≤150cc)' }, { id: 'motorcycle_large', label: 'Motorcycle (>150cc)' }, { id: 'scooter_petrol', label: 'Scooter (Petrol)' }, { id: 'scooter_electric', label: 'Scooter (Electric)' }, { id: 'motorcycle_electric', label: 'Motorcycle (Electric)' }] },
+            { id: 'auto_rickshaw', icon: 'electric_rickshaw', label: 'Auto', sub: [{ id: 'cng', label: 'CNG' }, { id: 'electric', label: 'Electric' }] },
+            { id: 'bus', icon: 'directions_bus', label: 'Bus', sub: [{ id: 'diesel', label: 'Diesel' }, { id: 'cng', label: 'CNG' }, { id: 'electric', label: 'Electric' }] },
+            { id: 'train', icon: 'train', label: 'Train', sub: [{ id: 'electric', label: 'Electric' }, { id: 'diesel', label: 'Diesel' }] },
+            { id: 'metro', icon: 'tram', label: 'Metro', sub: [{ id: 'electric', label: 'Electric' }] },
+            { id: 'non_motorized', icon: 'directions_walk', label: 'Active', sub: [{ id: 'walking', label: 'Walking' }, { id: 'cycling', label: 'Cycling' }, { id: 'ebike', label: 'E-Bike' }] }
+        ];
+
+        let currentMain = 'car', currentSub = 'petrol';
+        const mainContainer = document.getElementById('mainCategories');
+        const subContainer = document.getElementById('subCategoryContainer');
+        const subList = document.getElementById('subCategories');
+
+        function renderSubcategories(mainId) {
+            const mode = transportModes.find(m => m.id === mainId);
+            if (!mode || !mode.sub || mode.sub.length === 0) { subContainer.classList.add('hidden'); return; }
+            subContainer.classList.remove('hidden'); subList.innerHTML = '';
+            mode.sub.forEach(s => {
+                const btn = document.createElement('button');
+                const isActive = (currentSub === s.id);
+                btn.className = `px-3 py-1.5 text-[12px] font-semibold rounded-full border-2 transition-all ${isActive ? 'bg-green-100 dark:bg-green-900/40 border-green-500 text-green-700 dark:text-green-300 shadow-sm' : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 text-gray-500 hover:border-green-300 dark:hover:border-green-500'}`;
+                btn.textContent = s.label;
+                btn.onclick = () => { currentSub = s.id; renderSubcategories(currentMain); };
+                subList.appendChild(btn);
+            });
+        }
+
+        function renderMainCategories() {
+            mainContainer.innerHTML = '';
+            transportModes.forEach(m => {
+                const isActive = (currentMain === m.id);
+                const btn = document.createElement('button');
+                btn.className = `flex-shrink-0 flex items-center gap-2 px-4 py-3 rounded-2xl border-2 transition-all min-w-[100px] justify-center ${isActive ? 'bg-primary border-primary text-white shadow-[0_4px_12px_rgba(0,106,45,0.2)] dark:shadow-none' : 'bg-gray-50 dark:bg-slate-900/50 border-gray-100 dark:border-slate-700 text-gray-500 dark:text-gray-400 hover:border-green-300'}`;
+                btn.innerHTML = `<span class="material-symbols-outlined" style="${isActive ? "font-variation-settings: 'FILL' 1" : ""}">${m.icon}</span><span class="text-sm font-bold tracking-wide">${m.label}</span>`;
+                btn.onclick = () => {
+                    currentMain = m.id;
+                    const modeDef = transportModes.find(x => x.id === m.id);
+                    currentSub = modeDef?.sub?.length ? modeDef.sub[0].id : null;
+                    renderMainCategories(); renderSubcategories(currentMain);
+                };
+                mainContainer.appendChild(btn);
+            });
+        }
+
+        function setQuickRoute(from, to) {
+            document.getElementById('origin').value = from;
+            document.getElementById('dest').value = to;
+            currentMain = 'car';
+            currentSub = 'petrol';
+            renderMainCategories();
+            renderSubcategories(currentMain);
+        }
+
+        renderMainCategories(); renderSubcategories(currentMain);
+
+        // API Loading & Route Fetching
+        const loadMapsScripts = (key) => {
+            const loadScript = document.createElement('script');
+            loadScript.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`;
+            loadScript.onload = initMapsEngine;
+            document.head.appendChild(loadScript);
+        };
+
+        const tryLocalFallback = () => {
+            console.warn('Vercel API not detected. Falling back to local api-key.js');
+            const localScript = document.createElement('script');
+            localScript.src = 'api-key.js';
+            localScript.onload = () => {
+                if (window.GOOGLE_MAPS_KEY) loadMapsScripts(window.GOOGLE_MAPS_KEY);
+                else document.getElementById('calculateBtn').innerHTML = 'API Key Missing (Local)';
+            };
+            localScript.onerror = () => {
+                document.getElementById('calculateBtn').innerHTML = 'Run via Vercel Dev or create api-key.js';
+            };
+            document.head.appendChild(localScript);
+        };
+
+        let mapsKey = '';
+        fetch('/api/maps-key')
+            .then(r => r.ok ? r.json() : Promise.reject('Not Vercel environment'))
+            .then(data => {
+                mapsKey = data.key;
+                if (!mapsKey) throw new Error('Key empty');
+                loadMapsScripts(mapsKey);
+            })
+            .catch(tryLocalFallback);
+
+        function initMapsEngine() {
+            const btn = document.getElementById('calculateBtn');
+            btn.disabled = false;
+            btn.classList.remove('opacity-50');
+            btn.innerHTML = `Calculate Impact <span class="material-symbols-outlined text-lg">arrow_forward</span>`;
+            
+            btn.onclick = async () => {
+                ['drivingRoute','walkingRoute','transitRoute','cyclingRoute'].forEach(k => localStorage.removeItem(k));
+                
+                const origin = document.getElementById('origin').value.trim();
+                const dest = document.getElementById('dest').value.trim();
+                if (!origin || !dest) return alert('Enter origin and destination');
+
+                btn.innerHTML = 'Calculating...';
+                btn.disabled = true;
+
+                localStorage.origin = origin;
+                localStorage.dest = dest;
+                localStorage.selectedMain = currentMain;
+                localStorage.selectedSub = currentSub;
+
+                try {
+                    const dirService = new google.maps.DirectionsService();
+                    const fetchRoute = (mode) => new Promise(resolve => {
+                        dirService.route({ origin, destination: dest, travelMode: mode }, (res, status) => {
+                            resolve(status === 'OK' ? res.routes[0] : null);
+                        });
+                    });
+
+                    const [driving, walking, transit, bicycling] = await Promise.all([
+                        fetchRoute('DRIVING'), fetchRoute('WALKING'), fetchRoute('TRANSIT'), fetchRoute('BICYCLING')
+                    ]);
+                    
+                    const mapLeg = r => {
+                        if (!r || !r.legs || !r.legs[0]) return null;
+                        return { 
+                            distance: r.legs[0].distance, 
+                            duration: r.legs[0].duration, 
+                            steps: r.legs[0].steps, 
+                            overview_polyline: r.overview_polyline 
+                        };
+                    };
+
+                    const dr = mapLeg(driving);
+                    const wa = mapLeg(walking);
+                    const tr = mapLeg(transit);
+                    const cy = mapLeg(bicycling);
+
+                    if (!dr && !wa && !tr && !cy) {
+                        alert('No route available for this specific query');
+                        btn.innerHTML = 'Calculate Impact <span class="material-symbols-outlined text-lg">arrow_forward</span>';
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    if (dr) localStorage.drivingRoute = JSON.stringify(dr);
+                    if (wa) localStorage.walkingRoute = JSON.stringify(wa);
+                    if (tr) localStorage.transitRoute = JSON.stringify(tr);
+                    if (cy) localStorage.cyclingRoute = JSON.stringify(cy);
+                    
+                    sessionStorage.setItem('routeCalculated', 'true');
+                    window.location.href = 'result.html';
+                } catch (e) {
+                    alert('Wait for Maps API to load, or connection error');
+                    btn.innerHTML = 'Calculate Impact <span class="material-symbols-outlined text-lg">arrow_forward</span>';
+                    btn.disabled = false;
+                }
+            };
+        }
+
+        renderNav('map');
+    </script>
+</body>
+
+</html>

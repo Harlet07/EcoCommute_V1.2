@@ -1,0 +1,20 @@
+{
+    "routes": [
+        {
+            "src": "/map",
+            "dest": "/index.html"
+        },
+        {
+            "src": "/history",
+            "dest": "/history.html"
+        },
+        {
+            "src": "/result",
+            "dest": "/result.html"
+        },
+        {
+            "src": "/",
+            "dest": "/index.html"
+        }
+    ]
+}

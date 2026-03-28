@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>EcoCommute Pune - History v1.2</title>
+    <meta name="description" content="EcoCommute Pune — Compare CO₂ emissions across transport modes for your Pune commute." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="shared.js"></script>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-fixed-variant": "#006a2d",
+                        "on-surface-variant": "#595c5e",
+                        "surface-container": "#e5e9eb",
+                        "inverse-primary": "#6bff8f",
+                        "tertiary-fixed-dim": "#73a2ff",
+                        "primary-fixed": "#6bff8f",
+                        "on-tertiary": "#f0f2ff",
+                        "on-secondary-fixed-variant": "#535b71",
+                        "surface-dim": "#d0d5d8",
+                        "on-secondary-fixed": "#373f54",
+                        "primary-fixed-dim": "#5bf083",
+                        "surface-bright": "#f5f7f9",
+                        "secondary": "#535b71",
+                        "on-background": "#2c2f31",
+                        "surface-tint": "#006a2d",
+                        "on-primary-container": "#005f28",
+                        "on-tertiary-fixed": "#00163b",
+                        "on-tertiary-container": "#002e6a",
+                        "tertiary": "#0057bd",
+                        "outline-variant": "#abadaf",
+                        "secondary-dim": "#484f65",
+                        "error-dim": "#b92902",
+                        "surface-variant": "#d9dde0",
+                        "surface-container-highest": "#d9dde0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#f0f2ff",
+                        "surface": "#f5f7f9",
+                        "inverse-surface": "#0b0f10",
+                        "on-error": "#ffefec",
+                        "primary": "#006a2d",
+                        "tertiary-container": "#8ab0ff",
+                        "inverse-on-surface": "#9a9d9f",
+                        "outline": "#747779",
+                        "secondary-fixed-dim": "#ccd4ee",
+                        "secondary-container": "#dae2fd",
+                        "background": "#f5f7f9",
+                        "on-secondary-container": "#4a5167",
+                        "tertiary-fixed": "#8ab0ff",
+                        "on-primary-fixed": "#004a1d",
+                        "primary-container": "#6bff8f",
+                        "error": "#b02500",
+                        "surface-container-low": "#eef1f3",
+                        "error-container": "#f95630",
+                        "on-surface": "#2c2f31",
+                        "secondary-fixed": "#dae2fd",
+                        "surface-container-high": "#dfe3e6",
+                        "on-tertiary-fixed-variant": "#00377b",
+                        "primary-dim": "#005d26",
+                        "tertiary-dim": "#004ca6",
+                        "on-error-container": "#520c00",
+                        "on-primary": "#ceffd0"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px", "3xl": "1.5rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-surface dark:bg-slate-900 font-body text-on-surface dark:text-slate-200 transition-colors duration-300 min-h-screen pb-32">
+
+    <!-- Top Navigation -->
+    <header
+        class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 max-w-2xl mx-auto rounded-full mt-4 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-[0_12px_40px_rgba(44,47,49,0.06)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+        <div class="flex items-center gap-3">
+            <a href="index.html"
+                class="p-2 hover:bg-green-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-90 duration-200 flex items-center justify-center">
+                <span class="material-symbols-outlined text-green-600 dark:text-green-400">arrow_back</span>
+            </a>
+            <span class="text-xl font-black tracking-tight text-green-700 dark:text-green-400 font-headline">EcoCommute
+                Pune</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="themeToggle"
+                class="p-2 hover:bg-green-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-90 duration-200">
+                <span class="material-symbols-outlined text-slate-500 dark:text-slate-400"
+                    id="themeIcon">dark_mode</span>
+            </button>
+            <!-- <button
+                class="p-2 hover:bg-green-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-90 duration-200">
+                <span class="material-symbols-outlined text-slate-500 dark:text-slate-400"
+                    data-icon="notifications">notifications</span>
+            </button>
+            <button
+                class="p-2 hover:bg-green-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-90 duration-200">
+                <span class="material-symbols-outlined text-slate-500 dark:text-slate-400"
+                    data-icon="account_circle">account_circle</span>
+            </button> -->
+        </div>
+    </header>
+
+    <main class="pt-28 px-4 max-w-2xl mx-auto">
+        <!-- View Header -->
+        <div class="flex items-center justify-between px-2 mb-6">
+            <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white font-headline tracking-tight">My Trips</h2>
+            <button onclick="clearHistory()" class="text-sm text-red-400 hover:text-red-500 font-bold transition-colors">Clear all</button>
+        </div>
+
+        <!-- Summary Banner -->
+        <div
+            class="bg-gradient-to-br from-green-600 to-green-800 dark:from-green-800 dark:to-green-950 text-white rounded-3xl p-6 shadow-lg shadow-green-200/50 dark:shadow-none mb-8 relative overflow-hidden">
+            <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-[120px] opacity-10"
+                style="font-variation-settings: 'FILL' 1;">eco</span>
+            <div class="relative z-10 flex items-center justify-between">
+                <div>
+                    <p class="text-green-100 text-xs font-bold uppercase tracking-widest opacity-90">Total CO₂ Saved</p>
+                    <div class="mt-2 flex items-baseline gap-1">
+                        <p class="text-5xl font-extrabold font-headline tracking-tighter" id="totalSaved">0.0</p>
+                        <p class="text-xl font-bold opacity-80">kg</p>
+                    </div>
+                    <p class="text-green-100/80 text-xs mt-1 font-medium">vs purely driving a petrol car</p>
+                </div>
+                <div class="text-right">
+                    <div class="bg-white/20 backdrop-blur py-2 px-3 rounded-2xl flex flex-col items-center">
+                        <span class="text-2xl font-black" id="totalTrips">0</span>
+                        <span class="text-[10px] uppercase font-bold tracking-wider opacity-80">Trips</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mt-6 relative z-10">
+                <div class="flex justify-between text-xs text-green-100 font-medium mb-1.5 opacity-90">
+                    <span id="milestoneTxt">Next Milestone: 10 kg</span>
+                    <span id="milestonePct">0%</span>
+                </div>
+                <div class="h-2.5 bg-black/20 rounded-full overflow-hidden">
+                    <div id="milestoneBar" class="h-full bg-white rounded-full transition-all duration-1000" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trip List -->
+        <div class="flex flex-col gap-4" id="tripList">
+            <!-- Populated via Javascript -->
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav id="bottomNav"
+        class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 bg-white dark:bg-slate-900 rounded-t-[3rem] border-none shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.5)] transition-colors duration-300">
+    </nav>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        function syncIcon() {
+            if (document.documentElement.classList.contains('dark')) {
+                themeIcon.textContent = 'light_mode';
+            } else {
+                themeIcon.textContent = 'dark_mode';
+            }
+        }
+        syncIcon();
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+            syncIcon();
+        });
+
+        function renderHistory() {
+            let history = [];
+            try { history = JSON.parse(localStorage.historyTrips || '[]'); } catch(e){}
+
+            const list = document.getElementById('tripList');
+            if (history.length === 0) {
+                list.innerHTML = `<div class="text-center py-16 flex flex-col items-center gap-3">
+  <span class="material-symbols-outlined text-[64px] text-green-200 dark:text-green-900" style="font-variation-settings:'FILL' 1;">route</span>
+  <p class="text-gray-500 dark:text-gray-400 font-medium">No trips logged yet</p>
+  <p class="text-xs text-gray-400 dark:text-gray-500">Calculate your first commute to start tracking impact</p>
+  <a href="index.html" class="mt-2 px-5 py-2 bg-primary text-white text-sm font-bold rounded-full hover:bg-primary-dim transition-colors">Plan a Trip</a>
+</div>`;
+                document.getElementById('totalSaved').textContent = '0.0';
+                document.getElementById('totalTrips').textContent = '0';
+                document.getElementById('milestoneTxt').textContent = 'Next Milestone: 10 kg';
+                document.getElementById('milestonePct').textContent = '0%';
+                document.getElementById('milestoneBar').style.width = '0%';
+                return;
+            }
+
+            let totalEmits = 0;
+            let totalSaved = 0;
+            
+            // Generate newest first array
+            const reversedHistory = [...history].reverse();
+
+            list.innerHTML = reversedHistory.map((t, idx) => {
+                totalSaved += (t.savedEmit || 0);
+                totalEmits += (t.baselineEmit || 0);
+                
+                const dateStr = new Date(t.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                const originS = t.origin.split(',')[0];
+                const destS = t.dest.split(',')[0];
+
+                let badgeHtml = '';
+                if (t.savedEmit > 0) {
+                   badgeHtml = `<div class="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-0.5">
+                                    <span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+                                    ${Math.round(t.savedEmit)}g saved
+                                </div>`;
+                } else {
+                   badgeHtml = `<div class="bg-surface-container-low dark:bg-slate-900 py-1 px-2.5 rounded-lg text-[11px] font-semibold text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/50">
+                                     Worst offender!
+                                </div>`;
+                }
+                
+                const titleLineHtml = `<div class="bg-surface-container-low dark:bg-slate-900 py-1 px-2.5 rounded-lg text-[11px] font-semibold text-gray-600 dark:text-gray-300">${Math.round(t.baselineEmit)}g emitted</div>`;
+
+                // Calculate real array index to pass to delete function
+                const realIndex = history.length - 1 - idx;
+
+                const bgColors = ['bg-primary/10 dark:bg-primary-dim/20 text-primary dark:text-primary-container', 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400', 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'];
+                const bgi = bgColors[idx % bgColors.length];
+
+                return `
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 shadow-[0_8px_20px_-10px_rgba(0,0,0,0.05)] border border-gray-100 dark:border-slate-700/50 flex items-start justify-between gap-4 transition-colors duration-300 hover:shadow-md">
+                    <div class="w-12 h-12 rounded-full ${bgi} flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-[24px]">${t.icon || 'commute'}</span>
+                    </div>
+                    <div class="flex-1 min-w-0 pt-0.5">
+                        <p class="font-bold text-gray-900 dark:text-white text-[15px] truncate">${originS} → ${destS}</p>
+                        <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1 gap-1.5 font-medium overflow-hidden">
+                            <span class="whitespace-nowrap">${dateStr}</span>
+                            <span class="flex-shrink-0 w-1 h-1 rounded-full bg-gray-300 dark:bg-slate-600"></span>
+                            <span class="whitespace-nowrap">${t.dist.toFixed(1)} km</span>
+                            <span class="flex-shrink-0 w-1 h-1 rounded-full bg-gray-300 dark:bg-slate-600"></span>
+                            <span class="truncate">${t.modeName || 'Transit'}</span>
+                        </div>
+                        <div class="flex items-center gap-3 mt-2 flex-wrap">
+                            ${titleLineHtml}
+                            ${badgeHtml}
+                        </div>
+                    </div>
+                    <button onclick="deleteTrip(${realIndex})" class="w-8 h-8 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-300 dark:text-slate-600 hover:text-red-500 transition-colors flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                </div>`;
+            }).join('');
+
+            document.getElementById('totalTrips').textContent = history.length;
+            document.getElementById('totalSaved').textContent = (totalSaved / 1000).toFixed(1);
+            
+            // Progress bar math
+            const nextMilestone = Math.ceil((totalSaved / 1000) / 10) * 10 || 10;
+            const pct = Math.min(100, Math.round(((totalSaved / 1000) / nextMilestone) * 100)) || 0;
+            document.getElementById('milestoneTxt').textContent = `Next Milestone: ${nextMilestone} kg`;
+            document.getElementById('milestonePct').textContent = `${pct}%`;
+            document.getElementById('milestoneBar').style.width = `${pct}%`;
+        }
+
+        function clearHistory() {
+            if(confirm('Delete all history?')) {
+                localStorage.removeItem('historyTrips');
+                renderHistory();
+            }
+        }
+
+        function deleteTrip(realIndex) {
+            let history = JSON.parse(localStorage.historyTrips || '[]');
+            history.splice(realIndex, 1);
+            localStorage.historyTrips = JSON.stringify(history);
+            renderHistory();
+        }
+
+        renderNav('history');
+        renderHistory();
+    </script>
+</body>
+
+</html>

@@ -27,57 +27,28 @@
             theme: {
                 extend: {
                     colors: {
-                        "on-primary-fixed-variant": "#006a2d",
-                        "on-surface-variant": "#595c5e",
-                        "surface-container": "#e5e9eb",
-                        "inverse-primary": "#6bff8f",
-                        "tertiary-fixed-dim": "#73a2ff",
-                        "primary-fixed": "#6bff8f",
-                        "on-tertiary": "#f0f2ff",
-                        "on-secondary-fixed-variant": "#535b71",
-                        "surface-dim": "#d0d5d8",
-                        "on-secondary-fixed": "#373f54",
-                        "primary-fixed-dim": "#5bf083",
-                        "surface-bright": "#f5f7f9",
-                        "secondary": "#535b71",
-                        "on-background": "#2c2f31",
-                        "surface-tint": "#006a2d",
-                        "on-primary-container": "#005f28",
-                        "on-tertiary-fixed": "#00163b",
-                        "on-tertiary-container": "#002e6a",
-                        "tertiary": "#0057bd",
-                        "outline-variant": "#abadaf",
-                        "secondary-dim": "#484f65",
-                        "error-dim": "#b92902",
-                        "surface-variant": "#d9dde0",
-                        "surface-container-highest": "#d9dde0",
-                        "surface-container-lowest": "#ffffff",
-                        "on-secondary": "#f0f2ff",
-                        "surface": "#f5f7f9",
-                        "inverse-surface": "#0b0f10",
-                        "on-error": "#ffefec",
-                        "primary": "#006a2d",
-                        "tertiary-container": "#8ab0ff",
-                        "inverse-on-surface": "#9a9d9f",
-                        "outline": "#747779",
-                        "secondary-fixed-dim": "#ccd4ee",
-                        "secondary-container": "#dae2fd",
-                        "background": "#f5f7f9",
-                        "on-secondary-container": "#4a5167",
-                        "tertiary-fixed": "#8ab0ff",
-                        "on-primary-fixed": "#004a1d",
-                        "primary-container": "#6bff8f",
-                        "error": "#b02500",
-                        "surface-container-low": "#eef1f3",
-                        "error-container": "#f95630",
-                        "on-surface": "#2c2f31",
-                        "secondary-fixed": "#dae2fd",
-                        "surface-container-high": "#dfe3e6",
-                        "on-tertiary-fixed-variant": "#00377b",
-                        "primary-dim": "#005d26",
-                        "tertiary-dim": "#004ca6",
-                        "on-error-container": "#520c00",
-                        "on-primary": "#ceffd0"
+                        primary: "#1c753e",
+                        "primary-dim": "#0a2219",
+                        "primary-dark": "#79e2a8",
+                        "primary-dark-dim": "#5fc98f",
+                        surface: "#e6f5ea",
+                        slate: {
+                            400: '#8fb5a2',
+                            500: '#8fb5a2',
+                            600: '#15412e',
+                            700: '#133829',
+                            800: '#0b261a',
+                            900: '#071510',
+                        },
+                        gray: {
+                            50: '#f7fcf9',
+                            100: '#eefaf2',
+                            300: '#d1e8d9',
+                            400: '#8fb5a2',
+                            500: '#4a6056',
+                            700: '#274737',
+                            900: '#1c753e',
+                        },
                     },
                     fontFamily: {
                         "headline": ["Plus Jakarta Sans"],
@@ -178,7 +149,7 @@
 
     <!-- Bottom Navigation -->
     <nav id="bottomNav"
-        class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 bg-white dark:bg-slate-900 rounded-t-[3rem] border-none shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.5)] transition-colors duration-300">
+        class="fixed bottom-4 left-4 right-4 z-50 flex justify-around items-center px-4 py-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] border border-gray-100 dark:border-slate-700/50 shadow-[0_20px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.4)] transition-colors duration-300">
     </nav>
 
     <script>
@@ -214,7 +185,7 @@
   <span class="material-symbols-outlined text-[64px] text-green-200 dark:text-green-900" style="font-variation-settings:'FILL' 1;">route</span>
   <p class="text-gray-500 dark:text-gray-400 font-medium">No trips logged yet</p>
   <p class="text-xs text-gray-400 dark:text-gray-500">Calculate your first commute to start tracking impact</p>
-  <a href="index.html" class="mt-2 px-5 py-2 bg-primary text-white text-sm font-bold rounded-full hover:bg-primary-dim transition-colors">Plan a Trip</a>
+  <a href="index.html" class="mt-2 px-5 py-2 bg-primary dark:bg-primary-dark text-white dark:text-slate-900 text-sm font-bold rounded-full hover:bg-primary-dim transition-colors">Plan a Trip</a>
 </div>`;
                 document.getElementById('totalSaved').textContent = '0.0';
                 document.getElementById('totalTrips').textContent = '0';
@@ -245,17 +216,17 @@
                                     ${Math.round(t.savedEmit)}g saved
                                 </div>`;
                 } else {
-                   badgeHtml = `<div class="bg-surface-container-low dark:bg-slate-900 py-1 px-2.5 rounded-lg text-[11px] font-semibold text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/50">
+                   badgeHtml = `<div class="bg-gray-100 dark:bg-slate-900 py-1 px-2.5 rounded-lg text-[11px] font-semibold text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/50">
                                      Worst offender!
                                 </div>`;
                 }
                 
-                const titleLineHtml = `<div class="bg-surface-container-low dark:bg-slate-900 py-1 px-2.5 rounded-lg text-[11px] font-semibold text-gray-600 dark:text-gray-300">${Math.round(t.baselineEmit)}g emitted</div>`;
+                const titleLineHtml = `<div class="bg-gray-100 dark:bg-slate-900 py-1 px-2.5 rounded-lg text-[11px] font-semibold text-gray-600 dark:text-gray-300">${Math.round(t.baselineEmit)}g emitted</div>`;
 
                 // Calculate real array index to pass to delete function
                 const realIndex = history.length - 1 - idx;
 
-                const bgColors = ['bg-primary/10 dark:bg-primary-dim/20 text-primary dark:text-primary-container', 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400', 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'];
+                const bgColors = ['bg-primary/10 dark:bg-primary-dark/20 text-primary dark:text-primary-dark', 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400', 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'];
                 const bgi = bgColors[idx % bgColors.length];
 
                 return `

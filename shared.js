@@ -7,9 +7,9 @@ function renderNav(activePage) {
     document.getElementById('bottomNav').innerHTML = navItems.map(item => {
         const isActive = activePage === item.id;
         const classes = isActive 
-            ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-200 rounded-full'
-            : 'text-slate-400 dark:text-slate-500 hover:text-green-600 dark:hover:text-green-400';
-        return `<a href="${item.href}" class="flex flex-col items-center justify-center ${classes} px-5 py-2 transition-all duration-300 ease-out">
+            ? 'bg-primary dark:bg-primary-dark text-white dark:text-slate-900 rounded-full shadow-md'
+            : 'text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-dark';
+        return `<a href="${item.href}" class="flex flex-col items-center justify-center ${classes} px-6 py-2 transition-all duration-300 ease-out">
             <span class="material-symbols-outlined">${item.icon}</span>
             <span class="font-['Inter'] text-[11px] font-medium tracking-wide">${item.label}</span>
         </a>`;

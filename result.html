@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>EcoCommute Pune - Results v1.2</title>
-    <meta name="description" content="EcoCommute Pune — Compare CO₂ emissions across transport modes for your Pune commute." />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>" />
+    <meta name="description"
+        content="EcoCommute Pune — Compare CO₂ emissions across transport modes for your Pune commute." />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
     <script src="shared.js"></script>
     <script>
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -23,501 +29,587 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#006a2d", "primary-dim": "#005d26", "primary-container": "#6bff8f", "on-primary": "#ceffd0",
-                        "on-primary-container": "#005f28", "secondary": "#535b71", "secondary-container": "#dae2fd",
-                        "error": "#b02500", "error-container": "#f95630",
-                        "surface": "#f5f7f9", "on-surface": "#2c2f31", "surface-variant": "#d9dde0", "on-surface-variant": "#595c5e",
-                        "surface-container-lowest": "#ffffff", "surface-container-low": "#eef1f3", "surface-container": "#e5e9eb",
-                        "surface-container-highest": "#d9dde0"
+                        primary: "#1c753e",
+                        "primary-dim": "#0a2219",
+                        "primary-dark": "#79e2a8",
+                        "primary-dark-dim": "#5fc98f",
+                        surface: "#e6f5ea",
+                        slate: {
+                            400: '#8fb5a2',
+                            500: '#8fb5a2',
+                            600: '#15412e',
+                            700: '#133829',
+                            800: '#0b261a',
+                            900: '#071510',
+                        },
+                        gray: {
+                            50: '#f7fcf9',
+                            100: '#eefaf2',
+                            300: '#d1e8d9',
+                            400: '#8fb5a2',
+                            500: '#4a6056',
+                            700: '#274737',
+                            900: '#1c753e',
+                        },
                     },
-                    fontFamily: { "headline": ["Plus Jakarta Sans"], "body": ["Inter"], "label": ["Inter"] },
-                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px", "3xl": "1.5rem"}
-                }
-            }
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px", "3xl": "1.5rem" },
+                },
+            },
         }
     </script>
     <style>
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .route-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .route-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
     </style>
 </head>
+
 <body class="bg-surface dark:bg-slate-900 font-body text-on-surface dark:text-slate-200 transition-colors duration-300">
-<!-- Top Navigation -->
-<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 max-w-2xl mx-auto rounded-full mt-4 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-[0_12px_40px_rgba(44,47,49,0.06)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
-    <div class="flex items-center gap-3">
-        <a href="index.html" class="p-2 hover:bg-green-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-90 duration-200 inline-flex">
-            <span class="material-symbols-outlined text-green-600 dark:text-green-400">arrow_back</span>
-        </a>
-        <span class="text-xl font-black tracking-tight text-green-700 dark:text-green-400 font-headline">EcoCommute Pune</span>
-    </div>
-    <div class="flex items-center gap-2">
-        <button id="themeToggle" class="p-2 hover:bg-green-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-90 duration-200">
-            <span class="material-symbols-outlined text-slate-500 dark:text-slate-400" id="themeIcon">dark_mode</span>
-        </button>
-    </div>
-</header>
+    <!-- Top Navigation -->
+    <header
+        class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 max-w-2xl mx-auto rounded-full mt-4 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-[0_12px_40px_rgba(44,47,49,0.06)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+        <div class="flex items-center gap-3">
+            <a href="index.html"
+                class="p-2 hover:bg-green-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-90 duration-200 inline-flex">
+                <span class="material-symbols-outlined text-green-600 dark:text-green-400">arrow_back</span>
+            </a>
+            <span class="text-xl font-black tracking-tight text-green-700 dark:text-green-400 font-headline">EcoCommute
+                Pune</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="themeToggle"
+                class="p-2 hover:bg-green-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-90 duration-200">
+                <span class="material-symbols-outlined text-slate-500 dark:text-slate-400"
+                    id="themeIcon">dark_mode</span>
+            </button>
+        </div>
+    </header>
 
-<!-- Background Map Section -->
-<section class="fixed top-0 left-0 w-full h-[45%] z-0 bg-slate-200 dark:bg-slate-800">
-    <img id="backgroundMap" class="w-full h-full object-cover dark:opacity-80 dark:brightness-75 transition-all duration-300" alt="Modern satellite map view of Pune city" src=""/>
-    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <svg class="w-full h-full opacity-60 dark:opacity-80" height="100%" viewbox="0 0 400 400" width="100%">
-            <path class="route-path" d="M100 300 Q 150 250, 200 200 T 300 100" fill="none" stroke="#006a2d" stroke-linecap="round" stroke-width="6" style="stroke-dashoffset: 0;"></path>
-            <circle cx="100" cy="300" fill="#006a2d" r="8"></circle>
-            <circle cx="300" cy="100" fill="white" r="10" stroke="#006a2d" stroke-width="3"></circle>
-        </svg>
-    </div>
-</section>
+    <!-- Background Map Section -->
+    <section class="fixed top-0 left-0 w-full h-[45%] z-0 bg-slate-200 dark:bg-slate-800">
+        <div id="mapContainer" class="w-full h-full transition-all duration-300"></div>
+    </section>
 
-<!-- Draggable Bottom Sheet Content -->
-<main class="relative z-10 mt-[409px] bg-surface dark:bg-slate-900 rounded-t-[3rem] min-h-screen shadow-[0_-20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_-20px_50px_rgba(0,0,0,0.5)] transition-colors duration-300">
-    <!-- Handle -->
-    <div class="flex justify-center pt-4 pb-2">
-        <div class="w-10 h-1.5 bg-surface-container-highest dark:bg-slate-700 rounded-full"></div>
-    </div>
-    
-    <div class="px-6 pb-32">
-        <!-- Impact Summary Bento Header -->
-        <div class="grid grid-cols-2 gap-4 mt-4">
-            <div class="col-span-2 bg-gradient-to-br from-primary to-primary-dim dark:from-green-800 dark:to-green-950 p-6 rounded-3xl text-on-primary shadow-lg shadow-green-200/50 dark:shadow-none">
-                <p class="font-label text-xs uppercase tracking-widest opacity-80" id="headerTag">Calculated Impact</p>
-                <h1 class="font-headline font-extrabold text-4xl mt-2 tracking-tighter" id="headerValue">--</h1>
-                <div class="mt-4 flex items-center gap-2 bg-white/20 dark:bg-black/20 w-fit px-3 py-1 rounded-full backdrop-blur-md">
-                    <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">eco</span>
-                    <span class="text-sm font-medium" id="headerBadge">Analyzing...</span>
-                </div>
-            </div>
-            
-            <!-- Small Stats Cards -->
-            <div class="bg-surface-container-low dark:bg-slate-800 p-5 rounded-3xl transition-colors duration-300 shadow-sm border border-gray-100 dark:border-slate-700/50">
-                <span class="material-symbols-outlined text-primary dark:text-primary-container mb-2">distance</span>
-                <p class="text-on-surface-variant dark:text-slate-400 text-xs font-medium">Distance</p>
-                <h2 class="font-headline font-bold text-xl text-on-surface dark:text-slate-100" id="distanceVal">-- km</h2>
-            </div>
-            <div class="bg-surface-container-low dark:bg-slate-800 p-5 rounded-3xl transition-colors duration-300 shadow-sm border border-gray-100 dark:border-slate-700/50">
-                <span class="material-symbols-outlined text-[#0057bd] dark:text-[#8ab0ff] mb-2">schedule</span>
-                <p class="text-on-surface-variant dark:text-slate-400 text-xs font-medium">Est. Time</p>
-                <h2 class="font-headline font-bold text-xl text-on-surface dark:text-slate-100" id="timeVal">-- mins</h2>
-            </div>
+    <!-- Draggable Bottom Sheet Content -->
+    <main
+        class="relative z-10 mt-[409px] bg-surface dark:bg-slate-900 rounded-t-[3rem] min-h-screen shadow-[0_-20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_-20px_50px_rgba(0,0,0,0.5)] transition-colors duration-300 hide-scrollbar">
+        <!-- Handle -->
+        <div class="flex justify-center pt-4 pb-2">
+            <div class="w-10 h-1.5 bg-gray-300 dark:bg-slate-700 rounded-full"></div>
         </div>
 
-        <!-- Comparison Bar Chart Section -->
-        <div class="mt-10">
-            <div class="flex justify-between items-end mb-6">
-                <div>
-                    <h3 class="font-headline font-bold text-xl text-on-surface dark:text-slate-100">Emission Alternatives</h3>
-                    <p class="text-on-surface-variant dark:text-slate-400 text-sm">Valid routes returned via API</p>
+        <div class="px-6 pb-32">
+            <!-- Impact Summary Bento Header -->
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div
+                    class="col-span-2 bg-gradient-to-br from-primary to-primary-dim dark:from-green-800 dark:to-green-950 p-6 rounded-3xl text-white shadow-lg shadow-green-200/50 dark:shadow-none">
+                    <p class="font-label text-xs uppercase tracking-widest opacity-80" id="headerTag">Calculated Impact
+                    </p>
+                    <h1 class="font-headline font-extrabold text-4xl mt-2 tracking-tighter" id="headerValue">--</h1>
+                    <div
+                        class="mt-4 flex items-center gap-2 bg-white/20 dark:bg-black/20 w-fit px-3 py-1 rounded-full backdrop-blur-md">
+                        <span class="material-symbols-outlined text-[18px]"
+                            style="font-variation-settings: 'FILL' 1;">eco</span>
+                        <span class="text-sm font-medium" id="headerBadge">Analyzing...</span>
+                    </div>
                 </div>
-                <span class="text-primary dark:text-primary-container font-bold text-sm bg-primary-container/30 dark:bg-primary-dim/30 px-3 py-1 rounded-full">g CO2</span>
+
+                <!-- Small Stats Cards -->
+                <div
+                    class="bg-gray-100 dark:bg-slate-800 p-5 rounded-3xl transition-colors duration-300 shadow-sm border border-gray-100 dark:border-slate-700/50">
+                    <span class="material-symbols-outlined text-primary dark:text-primary-dark mb-2">distance</span>
+                    <p class="text-gray-500 dark:text-slate-400 text-xs font-medium">Distance</p>
+                    <h2 class="font-headline font-bold text-xl text-gray-900 dark:text-slate-100" id="distanceVal">-- km
+                    </h2>
+                </div>
+                <div
+                    class="bg-gray-100 dark:bg-slate-800 p-5 rounded-3xl transition-colors duration-300 shadow-sm border border-gray-100 dark:border-slate-700/50">
+                    <span class="material-symbols-outlined text-[#0057bd] dark:text-[#8ab0ff] mb-2">schedule</span>
+                    <p class="text-gray-500 dark:text-slate-400 text-xs font-medium">Est. Time</p>
+                    <h2 class="font-headline font-bold text-xl text-gray-900 dark:text-slate-100" id="timeVal">-- mins
+                    </h2>
+                </div>
             </div>
-            
-            <div class="flex gap-2 mb-4">
-                <button id="sortEmission" onclick="currentSort='emissions'; generateAnalysis()" class="px-3 py-1 rounded-full bg-primary text-white text-sm shadow-md transition-all">Emissions</button>
-                <button id="sortTime" onclick="currentSort='time'; generateAnalysis()" class="px-3 py-1 rounded-full bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-slate-400 text-sm transition-all hover:bg-gray-300 dark:hover:bg-slate-700">Time</button>
-            </div>
-            
-            <div class="space-y-6" id="emissionsList">
-                <!-- Javascript will inject emissions comparisons here -->
-            </div>
-            
-            <!-- Route Details -->
-            <div class="mt-8 border-t border-gray-100 dark:border-slate-800 pt-6">
-                <h3 class="font-headline font-bold text-lg text-on-surface dark:text-slate-100 mb-6">Route Detail</h3>
-                <div class="relative pl-8 space-y-8" id="routeNodes">
-                    <!-- Javascript will inject route steps here -->
+
+            <!-- Comparison Bar Chart Section -->
+            <div class="mt-10">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <h3 class="font-headline font-bold text-xl text-gray-900 dark:text-slate-100">Emission
+                            Alternatives</h3>
+                        <p class="text-gray-500 dark:text-slate-400 text-sm">Valid routes returned via API</p>
+                    </div>
+                    <span
+                        class="text-primary dark:text-primary-dark font-bold text-sm bg-primary-dim/10 dark:bg-primary-dark/20 px-3 py-1 rounded-full">g
+                        CO2</span>
+                </div>
+
+                <div class="flex gap-2 mb-4">
+                    <button id="sortEmission" onclick="currentSort='emissions'; generateAnalysis()"
+                        class="px-3 py-1 rounded-full bg-primary dark:bg-primary-dark text-white dark:text-slate-900 text-sm shadow-md transition-all">Emissions</button>
+                    <button id="sortTime" onclick="currentSort='time'; generateAnalysis()"
+                        class="px-3 py-1 rounded-full bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-slate-400 text-sm transition-all hover:bg-gray-300 dark:hover:bg-slate-700">Time</button>
+                </div>
+
+                <div class="space-y-6" id="emissionsList">
+                    <!-- Javascript will inject emissions comparisons here -->
+                </div>
+
+                <!-- Route Details -->
+                <div class="mt-8 border-t border-gray-100 dark:border-slate-800 pt-6">
+                    <h3 class="font-headline font-bold text-lg text-gray-900 dark:text-slate-100 mb-6">Route Detail</h3>
+                    <div class="relative pl-8 space-y-8" id="routeNodes">
+                        <!-- Javascript will inject route steps here -->
+                    </div>
                 </div>
             </div>
         </div>
+    </main>
+
+    <!-- Save Trip Floating Action Button -->
+    <button onclick="saveCurrentTrip()" id="saveTripBtn"
+        class="hidden fixed bottom-28 right-6 bg-primary dark:bg-primary-dark text-white dark:text-slate-900 shadow-lg hover:shadow-xl hover:scale-105 transition-all p-4 rounded-full flex items-center gap-2 z-40 active:scale-95">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+    </button>
+
+    <!-- Toast -->
+    <div id="saveToast"
+        class="fixed top-24 left-1/2 -translate-x-1/2 bg-gray-300 dark:bg-slate-800 text-gray-900 dark:text-white px-5 py-3 rounded-full shadow-lg text-sm font-bold opacity-0 pointer-events-none transition-all duration-300 translate-y-4 z-50 flex items-center gap-2 border border-white/20 dark:border-slate-700">
+        <span class="material-symbols-outlined text-green-600 dark:text-primary-dark text-[18px]"
+            style="font-variation-settings: 'FILL' 1;">check_circle</span>
+        Trip saved!
     </div>
-</main>
 
-<!-- Save Trip Floating Action Button -->
-<button onclick="saveCurrentTrip()" id="saveTripBtn" class="hidden fixed bottom-24 right-6 bg-primary dark:bg-primary-container text-white dark:text-primary-fixed-variant shadow-lg hover:shadow-xl hover:scale-105 transition-all p-4 rounded-full flex items-center gap-2 z-40 active:scale-95">
-    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
-</button>
+    <!-- Bottom Navigation -->
+    <nav id="bottomNav"
+        class="fixed bottom-4 left-4 right-4 z-50 flex justify-around items-center px-4 py-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] border border-gray-100 dark:border-slate-700/50 shadow-[0_20px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.4)] transition-colors duration-300">
+    </nav>
 
-<!-- Toast -->
-<div id="saveToast" class="fixed top-24 left-1/2 -translate-x-1/2 bg-surface-container-highest dark:bg-slate-800 text-on-surface dark:text-white px-5 py-3 rounded-full shadow-lg text-sm font-bold opacity-0 pointer-events-none transition-all duration-300 translate-y-4 z-50 flex items-center gap-2 border border-white/20 dark:border-slate-700">
-    <span class="material-symbols-outlined text-green-600 dark:text-green-400 text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-    Trip saved!
-</div>
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        const darkMapStyle = [
+            { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+            { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+            { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+            { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#d59563" }] },
+            { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#d59563" }] },
+            { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#263c3f" }] },
+            { featureType: "poi.park", elementType: "labels.text.fill", stylers: [{ color: "#6b9a76" }] },
+            { featureType: "road", elementType: "geometry", stylers: [{ color: "#38414e" }] },
+            { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#212a37" }] },
+            { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#9ca5b3" }] },
+            { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#746855" }] },
+            { featureType: "road.highway", elementType: "geometry.stroke", stylers: [{ color: "#1f2835" }] },
+            { featureType: "road.highway", elementType: "labels.text.fill", stylers: [{ color: "#f3d19c" }] },
+            { featureType: "transit", elementType: "geometry", stylers: [{ color: "#2f3948" }] },
+            { featureType: "transit.station", elementType: "labels.text.fill", stylers: [{ color: "#d59563" }] },
+            { featureType: "water", elementType: "geometry", stylers: [{ color: "#17263c" }] },
+            { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#515c6d" }] },
+            { featureType: "water", elementType: "labels.text.stroke", stylers: [{ color: "#17263c" }] }
+        ];
 
-<!-- Bottom Navigation -->
-<nav id="bottomNav" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 bg-white dark:bg-slate-900 rounded-t-[3rem] border-none shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.5)] transition-colors duration-300">
-</nav>
+        function syncIcon() { themeIcon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode'; }
+        syncIcon();
+        themeToggle.addEventListener('click', () => { 
+            document.documentElement.classList.toggle('dark'); 
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.theme = isDark ? 'dark' : 'light'; 
+            syncIcon(); 
+            if (window.ecoMap) {
+                window.ecoMap.setOptions({ styles: isDark ? darkMapStyle : [] });
+            }
+        });
 
-<script>
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    function syncIcon() { themeIcon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode'; }
-    syncIcon();
-    themeToggle.addEventListener('click', () => { document.documentElement.classList.toggle('dark'); localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light'; syncIcon(); });
+        // Emission Factors per km (User Defined)
+        const factorDb = {
+            'car_petrol': { name: 'Petrol Car', icon: 'directions_car', f: 120 },
+            'car_diesel': { name: 'Diesel Car', icon: 'directions_car', f: 110 },
+            'car_cng': { name: 'CNG Car', icon: 'directions_car', f: 90 },
+            'car_hybrid_petrol': { name: 'Hybrid Car', icon: 'directions_car', f: 85 },
+            'car_hybrid_plugin': { name: 'Plugin Hybrid', icon: 'directions_car', f: 60 },
+            'car_electric': { name: 'Electric Car', icon: 'electric_car', f: 82 },
+            'two_wheeler_motorcycle_small': { name: 'Small Bike', icon: 'two_wheeler', f: 57 },
+            'two_wheeler_motorcycle_large': { name: 'Large Bike', icon: 'two_wheeler', f: 77 },
+            'two_wheeler_scooter_petrol': { name: 'Scooter (Petrol)', icon: 'two_wheeler', f: 65 },
+            'two_wheeler_scooter_electric': { name: 'Scooter (EV)', icon: 'pedal_bike', f: 27 },
+            'two_wheeler_motorcycle_electric': { name: 'Electric Bike', icon: 'pedal_bike', f: 30 },
+            'auto_rickshaw_cng': { name: 'CNG Auto', icon: 'electric_rickshaw', f: 70 },
+            'auto_rickshaw_electric': { name: 'EV Auto', icon: 'electric_rickshaw', f: 35 },
+            'bus_diesel': { name: 'Diesel Bus', icon: 'directions_bus', f: 900 },
+            'bus_cng': { name: 'CNG Bus', icon: 'directions_bus', f: 800 },
+            'bus_electric': { name: 'Electric Bus', icon: 'directions_bus', f: 700 },
+            'train_diesel': { name: 'Local Train (Diesel)', icon: 'train', f: 600 },
+            'train_electric': { name: 'Local Train (EV)', icon: 'train', f: 400 },
+            'metro_electric': { name: 'Metro', icon: 'tram', f: 200 },
+            'non_motorized_walking': { name: 'Walking', icon: 'directions_walk', f: 0 },
+            'non_motorized_cycling': { name: 'Cycling', icon: 'directions_bike', f: 0 },
+            'non_motorized_ebike': { name: 'E-Bike', icon: 'electric_bike', f: 10 }
+        };
 
-    // Emission Factors per km (User Defined)
-    const factorDb = {
-        'car_petrol': { name: 'Petrol Car', icon: 'directions_car', f: 120 },
-        'car_diesel': { name: 'Diesel Car', icon: 'directions_car', f: 110 },
-        'car_cng': { name: 'CNG Car', icon: 'directions_car', f: 90 },
-        'car_hybrid_petrol': { name: 'Hybrid Car', icon: 'directions_car', f: 85 },
-        'car_hybrid_plugin': { name: 'Plugin Hybrid', icon: 'directions_car', f: 60 },
-        'car_electric': { name: 'Electric Car', icon: 'electric_car', f: 82 },
-        'two_wheeler_motorcycle_small': { name: 'Small Bike', icon: 'two_wheeler', f: 57 },
-        'two_wheeler_motorcycle_large': { name: 'Large Bike', icon: 'two_wheeler', f: 77 },
-        'two_wheeler_scooter_petrol': { name: 'Scooter (Petrol)', icon: 'two_wheeler', f: 65 },
-        'two_wheeler_scooter_electric': { name: 'Scooter (EV)', icon: 'pedal_bike', f: 27 },
-        'two_wheeler_motorcycle_electric': { name: 'Electric Bike', icon: 'pedal_bike', f: 30 },
-        'auto_rickshaw_cng': { name: 'CNG Auto', icon: 'electric_rickshaw', f: 70 },
-        'auto_rickshaw_electric': { name: 'EV Auto', icon: 'electric_rickshaw', f: 35 },
-        'bus_diesel': { name: 'Diesel Bus', icon: 'directions_bus', f: 27 },
-        'bus_cng': { name: 'CNG Bus', icon: 'directions_bus', f: 24 },
-        'bus_electric': { name: 'Electric Bus', icon: 'directions_bus', f: 22 },
-        'train_diesel': { name: 'Local Train (Diesel)', icon: 'train', f: 10 },
-        'train_electric': { name: 'Local Train (EV)', icon: 'train', f: 6 },
-        'metro_electric': { name: 'Metro', icon: 'tram', f: 5 },
-        'non_motorized_walking': { name: 'Walking', icon: 'directions_walk', f: 0 },
-        'non_motorized_cycling': { name: 'Cycling', icon: 'directions_bike', f: 0 },
-        'non_motorized_ebike': { name: 'E-Bike', icon: 'electric_bike', f: 10 }
-    };
+        let currentSort = 'emissions';
 
-    let currentSort = 'emissions';
-
-    function safeParse(val) {
-        if (!val) return null;
-        try { return JSON.parse(val); } catch (e) {
-            console.warn('JSON parsing failed for route data:', e);
-            return null;
+        function safeParse(val) {
+            if (!val) return null;
+            try { return JSON.parse(val); } catch (e) {
+                console.warn('JSON parsing failed for route data:', e);
+                return null;
+            }
         }
-    }
 
-    function generateAnalysis() {
-        console.log("Running analysis");
-        
-        const driveRaw = localStorage.drivingRoute;
-        const walkRaw = localStorage.walkingRoute;
-        const transitRaw = localStorage.transitRoute;
-        const cycleRaw = localStorage.cyclingRoute;
-        
-        if (!driveRaw && !walkRaw && !transitRaw) {
-            console.warn("Missing expected route data entirely");
-            document.body.innerHTML = `
+        function generateAnalysis() {
+            console.log("Running analysis");
+
+            const driveRaw = localStorage.drivingRoute;
+            const walkRaw = localStorage.walkingRoute;
+            const transitRaw = localStorage.transitRoute;
+            const cycleRaw = localStorage.cyclingRoute;
+
+            if (!driveRaw && !walkRaw && !transitRaw) {
+                console.warn("Missing expected route data entirely");
+                document.body.innerHTML = `
                 <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center text-gray-500 dark:text-gray-400 bg-surface dark:bg-slate-900 transition-colors z-50 relative">
                     <span class="material-symbols-outlined text-[64px] mb-4 text-gray-300 dark:text-slate-700 shadow-sm rounded-full bg-white dark:bg-slate-800 p-4">warning</span>
                     <h2 class="text-2xl font-bold font-headline mb-2 text-gray-900 dark:text-white">Route Data Error</h2>
                     <p class="mb-6 font-medium">No valid transit modes could be loaded via Google Maps for this route.</p>
-                    <a href="index.html" class="bg-primary hover:bg-primary-dim text-white px-8 py-3 rounded-full font-bold shadow-lg transition-colors">Try Another Route</a>
+                    <a href="index.html" class="bg-primary dark:bg-primary-dark text-white dark:text-slate-900 px-8 py-3 rounded-full font-bold shadow-lg transition-colors">Try Another Route</a>
                 </div>
             `;
-            return;
-        }
-        const selMain = localStorage.selectedMain || 'car';
-        const selSub = localStorage.selectedSub || 'petrol';
-        const selKey = `${selMain}_${selSub}`;
-        const baselineDef = factorDb[selKey];
-
-        if (!baselineDef) return;
-
-        let modes = [];
-        let baseDist = 0, baseTime = 0;
-
-        // Add Drives
-        if (driveRaw) {
-            const driving = safeParse(driveRaw);
-            if (driving) {
-                const dKm = driving.distance.value / 1000;
-                const tMin = Math.round(driving.duration.value / 60);
-
-                // Add all driving-dependent modes
-                ['car', 'two_wheeler', 'auto_rickshaw'].forEach(cat => {
-                    Object.keys(factorDb).filter(k => k.startsWith(cat)).forEach(key => {
-                        const isBase = key === selKey;
-                        if (isBase) { baseDist = dKm; baseTime = tMin; }
-                        modes.push({ id: key, em: factorDb[key].f * dKm, time: tMin, base: isBase, name: factorDb[key].name, icon: factorDb[key].icon });
-                    });
-                });
+                return;
             }
-        }
+            const selMain = localStorage.selectedMain || 'car';
+            const selSub = localStorage.selectedSub || 'petrol';
+            const selKey = `${selMain}_${selSub}`;
+            const baselineDef = factorDb[selKey];
 
-        // Add Walks
-        if (walkRaw) {
-            const walking = safeParse(walkRaw);
-            if (walking) {
-                const dKm = walking.distance.value / 1000;
-                const tMinWalk = Math.round(walking.duration.value / 60);
-                const cycleParsed = safeParse(cycleRaw);
-                const tMinBike = cycleParsed ? Math.round(cycleParsed.duration.value / 60) : Math.round(tMinWalk / 3);
+            if (!baselineDef) return;
 
-                Object.keys(factorDb).filter(k => k.startsWith('non_motorized')).forEach(key => {
-                    const isBase = key === selKey;
-                    const t = key.includes('cycling') || key.includes('ebike') ? tMinBike : tMinWalk;
-                    if (isBase) { baseDist = dKm; baseTime = t; }
-                    modes.push({ id: key, em: factorDb[key].f * dKm, time: t, base: isBase, name: factorDb[key].name, icon: factorDb[key].icon });
-                });
-            }
-        }
+            let modes = [];
+            let baseDist = 0, baseTime = 0;
 
-        // Add Transit
-        if (transitRaw) {
-            const transit = safeParse(transitRaw);
-            if (transit) {
-                const dKm = transit.distance.value / 1000;
-                const tMin = Math.round(transit.duration.value / 60);
-
-                const avgTransitFactor = 15; // g/passenger-km (realistic midpoint)
-                
-                modes.push({
-                    id: 'transit_combined',
-                    name: 'Public Transport',
-                    icon: 'directions_transit',
-                    em: avgTransitFactor * dKm,
-                    time: tMin,
-                    base: (selMain === 'bus' || selMain === 'metro' || selMain === 'train')
-                });
-            }
-        }
-
-        // Handle case where route didn't return baseline
-        if (baseDist === 0) {
+            // Add Drives
             if (driveRaw) {
-               baseDist = JSON.parse(driveRaw).distance.value / 1000;
-               document.getElementById('headerBadge').innerText = "Estimated via road distance";
-            } else {
-               document.getElementById('headerValue').innerText = 'No Route';
-               document.getElementById('headerBadge').innerText = 'API limit or impossible mode';
-               return;
+                const driving = safeParse(driveRaw);
+                if (driving) {
+                    const dKm = driving.distance.value / 1000;
+                    const tMin = Math.round(driving.duration.value / 60);
+
+                    // Add all driving-dependent modes
+                    ['car', 'two_wheeler', 'auto_rickshaw'].forEach(cat => {
+                        Object.keys(factorDb).filter(k => k.startsWith(cat)).forEach(key => {
+                            const isBase = key === selKey;
+                            if (isBase) { baseDist = dKm; baseTime = tMin; }
+                            modes.push({ id: key, em: factorDb[key].f * dKm, time: tMin, base: isBase, name: factorDb[key].name, icon: factorDb[key].icon });
+                        });
+                    });
+                }
             }
-        }
 
-        document.getElementById('distanceVal').innerText = `${baseDist.toFixed(1)} km`;
-        document.getElementById('timeVal').innerText = `${baseTime} mins`;
+            // Add Walks
+            if (walkRaw) {
+                const walking = safeParse(walkRaw);
+                if (walking) {
+                    const dKm = walking.distance.value / 1000;
+                    const tMinWalk = Math.round(walking.duration.value / 60);
+                    const cycleParsed = safeParse(cycleRaw);
+                    const tMinBike = cycleParsed ? Math.round(cycleParsed.duration.value / 60) : Math.round(tMinWalk / 3);
 
-        // Compute baseline carbon footprint for top badge
-        const baselineFootprint = factorDb[selKey].f * baseDist;
-        const worstFootprint = Math.max(...modes.map(m => m.em));
-        if (baselineFootprint === 0) {
-            document.getElementById('headerValue').innerText = '100% Eco';
-            document.getElementById('headerBadge').innerText = '0 Emissions';
-        } else {
-            const saved = Math.max(0, 100 - (baselineFootprint / worstFootprint * 100));
-            document.getElementById('headerValue').innerText = `${Math.round(saved)}% Saved`;
-            document.getElementById('headerBadge').innerText = `${Math.round(baselineFootprint)}g Total Impact`;
-        }
+                    Object.keys(factorDb).filter(k => k.startsWith('non_motorized')).forEach(key => {
+                        const isBase = key === selKey;
+                        const t = key.includes('cycling') || key.includes('ebike') ? tMinBike : tMinWalk;
+                        if (isBase) { baseDist = dKm; baseTime = t; }
+                        modes.push({ id: key, em: factorDb[key].f * dKm, time: t, base: isBase, name: factorDb[key].name, icon: factorDb[key].icon });
+                    });
+                }
+            }
 
-        // Ranking Logic: Primary (emissions desc), Secondary (time desc)
-        if (currentSort === 'emissions') {
-            modes.sort((a, b) => {
-                if (Math.round(a.em) !== Math.round(b.em)) return a.em - b.em;
-                return a.time - b.time; // Tie-breaker: Time
-            });
-        } else {
-            modes.sort((a, b) => {
-                if (a.time !== b.time) return a.time - b.time;
-                return a.em - b.em; // Tie-breaker: Emissions
-            });
-        }
-        
-        // Active Toggle State
-        document.getElementById('sortEmission').className = currentSort === 'emissions' 
-            ? 'px-3 py-1 rounded-full bg-primary text-white text-sm shadow-md transition-all' 
-            : 'px-3 py-1 rounded-full bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-slate-400 text-sm transition-all hover:bg-gray-300 dark:hover:bg-slate-700';
-            
-        document.getElementById('sortTime').className = currentSort === 'time' 
-            ? 'px-3 py-1 rounded-full bg-primary text-white text-sm shadow-md transition-all' 
-            : 'px-3 py-1 rounded-full bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-slate-400 text-sm transition-all hover:bg-gray-300 dark:hover:bg-slate-700';
+            // Add Transit
+            if (transitRaw) {
+                const transit = safeParse(transitRaw);
+                if (transit) {
+                    const dKm = transit.distance.value / 1000;
+                    const tMin = Math.round(transit.duration.value / 60);
 
-        // Dedup safety (if logic caused double inserts)
-        const uniqueModes = [];
-        modes.forEach(m => { if (!uniqueModes.find(u => u.name === m.name)) uniqueModes.push(m); });
+                    ['bus', 'train', 'metro'].forEach(cat => {
+                        Object.keys(factorDb).filter(k => k.startsWith(cat)).forEach(key => {
+                            const isBase = key === selKey;
+                            if (isBase) { baseDist = dKm; baseTime = tMin; }
+                            modes.push({ id: key, em: factorDb[key].f * dKm, time: tMin, base: isBase, name: factorDb[key].name, icon: factorDb[key].icon });
+                        });
+                    });
+                }
+            }
 
-        // Rendering Comparison Chart
-        const validEmissions = uniqueModes.filter(m => !m.noData).map(m => m.em);
-        const maxEm = Math.max(...validEmissions, 10);
-        
-        let listHtml = uniqueModes.map((m, idx) => {
-            if (m.noData) {
-                return `
-                <div class="space-y-2 opacity-50 ${idx >= 8 ? 'hidden' : ''}">
+            // Handle case where route didn't return baseline
+            if (baseDist === 0) {
+                if (driveRaw) {
+                    baseDist = JSON.parse(driveRaw).distance.value / 1000;
+                    document.getElementById('headerBadge').innerText = "Estimated via road distance";
+                } else {
+                    document.getElementById('headerValue').innerText = 'No Route';
+                    document.getElementById('headerBadge').innerText = 'API limit or impossible mode';
+                    return;
+                }
+            }
+
+            document.getElementById('distanceVal').innerText = `${baseDist.toFixed(1)} km`;
+            document.getElementById('timeVal').innerText = `${baseTime} mins`;
+
+            // Compute baseline carbon footprint for top badge
+            const baselineFootprint = factorDb[selKey].f * baseDist;
+            const worstFootprint = Math.max(...modes.map(m => m.em));
+            if (baselineFootprint === 0) {
+                document.getElementById('headerValue').innerText = '100% Eco';
+                document.getElementById('headerBadge').innerText = '0 Emissions';
+            } else {
+                const saved = Math.max(0, 100 - (baselineFootprint / worstFootprint * 100));
+                document.getElementById('headerValue').innerText = `${Math.round(saved)}% Saved`;
+                document.getElementById('headerBadge').innerText = `${Math.round(baselineFootprint)}g Total Impact`;
+            }
+
+            // Ranking Logic: Primary (emissions desc), Secondary (time desc)
+            if (currentSort === 'emissions') {
+                modes.sort((a, b) => {
+                    if (Math.round(a.em) !== Math.round(b.em)) return a.em - b.em;
+                    return a.time - b.time; // Tie-breaker: Time
+                });
+            } else {
+                modes.sort((a, b) => {
+                    if (a.time !== b.time) return a.time - b.time;
+                    return a.em - b.em; // Tie-breaker: Emissions
+                });
+            }
+
+            // Active Toggle State
+            document.getElementById('sortEmission').className = currentSort === 'emissions'
+                ? 'px-3 py-1 rounded-full bg-primary dark:bg-primary-dark text-white dark:text-slate-900 text-sm shadow-md transition-all'
+                : 'px-3 py-1 rounded-full bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-slate-400 text-sm transition-all hover:bg-gray-300 dark:hover:bg-slate-700';
+
+            document.getElementById('sortTime').className = currentSort === 'time'
+                ? 'px-3 py-1 rounded-full bg-primary dark:bg-primary-dark text-white dark:text-slate-900 text-sm shadow-md transition-all'
+                : 'px-3 py-1 rounded-full bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-slate-400 text-sm transition-all hover:bg-gray-300 dark:hover:bg-slate-700';
+
+            // Dedup safety (if logic caused double inserts)
+            const uniqueModes = [];
+            modes.forEach(m => { if (!uniqueModes.find(u => u.name === m.name)) uniqueModes.push(m); });
+
+            // Rendering Comparison Chart
+            const validEmissions = uniqueModes.filter(m => !m.noData).map(m => m.em);
+            const maxEm = Math.max(...validEmissions, 10);
+
+            let listHtml = uniqueModes.map((m, idx) => {
+                if (m.noData) {
+                    return `
+                <div class="space-y-2 opacity-50">
                     <div class="flex justify-between text-sm font-medium px-1 text-gray-400">
                         <span class="flex items-center gap-2"><span class="material-symbols-outlined text-sm">${m.icon}</span> ${m.name}</span>
                         <span>Not available for this route</span>
                     </div>
-                    <div class="h-3 w-full bg-surface-container dark:bg-slate-700 rounded-full border border-dashed border-gray-400"></div>
+                    <div class="h-3 w-full bg-gray-100 dark:bg-slate-700 rounded-full border border-dashed border-gray-400"></div>
                 </div>`;
-            }
-        
-            const p = Math.max(2, (m.em / maxEm) * 100);
-            const isBase = m.base;
-            const barBg = isBase ? 'bg-primary dark:bg-primary-container' : 'bg-gray-400 dark:bg-slate-500';
-            const valCol = isBase ? 'text-primary dark:text-primary-container font-extrabold' : 'text-gray-900 dark:text-gray-100 font-bold';
-            
-            return `
-            <div class="space-y-2 ${idx >= 8 ? 'hidden' : ''}"> <!-- Cap list at 8 UI items -->
+                }
+
+                const p = Math.max(2, (m.em / maxEm) * 100);
+                const isBase = m.base;
+                const barBg = isBase ? 'bg-primary dark:bg-primary-dark' : 'bg-gray-400 dark:bg-slate-500';
+                const valCol = isBase ? 'text-primary dark:text-primary-dark font-extrabold' : 'text-gray-900 dark:text-gray-100 font-bold';
+
+                return `
+            <div class="space-y-2">
                 <div class="flex justify-between text-sm font-medium px-1">
-                    <span class="flex items-center gap-2 ${isBase ? 'text-primary dark:text-primary-container font-extrabold' : 'text-gray-700 dark:text-slate-300'}">
+                    <span class="flex items-center gap-2 ${isBase ? 'text-primary dark:text-primary-dark font-extrabold' : 'text-gray-700 dark:text-slate-300'}">
                         <span class="material-symbols-outlined text-sm" ${isBase ? "style=\"font-variation-settings: 'FILL' 1;\"" : ""}>${m.icon}</span> 
                         ${m.name} <span class="text-xs text-gray-400 opacity-80">(~${m.time}m)</span>
                     </span>
                     <span class="${valCol}">${Math.round(m.em)}g</span>
                 </div>
-                <div class="h-3 w-full bg-surface-container dark:bg-slate-700 rounded-full overflow-hidden">
+                <div class="h-3 w-full bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div class="h-full ${barBg} rounded-full" style="width: ${p}%"></div>
                 </div>
             </div>`;
-        }).join('');
-        
-        document.getElementById('emissionsList').innerHTML = listHtml + 
-            `<p class="text-[10px] text-gray-400 dark:text-gray-500 mt-2 italic px-1">* EV figures include India grid carbon intensity (~700g CO₂/kWh).</p>`;
+            }).join('');
 
-        // Rendering Route Details Native to API
-        generateRouteNodes(driveRaw, walkRaw, transitRaw, baselineDef);
-        
-        // Prep Save Trip data
-        window.currentTripPayload = {
-            origin: localStorage.origin || "Unknown Start",
-            dest: localStorage.dest || "Unknown End",
-            dist: baseDist,
-            baselineEmit: baselineFootprint,
-            savedEmit: Math.max(0, worstFootprint - baselineFootprint),
-            modeName: baselineDef.name,
-            icon: baselineDef.icon
-        };
-        
-        if (baseDist > 0 && modes.length > 0) {
-            document.getElementById('saveTripBtn').classList.remove('hidden');
+            document.getElementById('emissionsList').innerHTML = listHtml +
+                `<p class="text-[10px] text-gray-400 dark:text-gray-500 mt-2 italic px-1">* EV figures include India grid carbon intensity (~700g CO₂/kWh).</p>`;
+
+            // Rendering Route Details Native to API
+            generateRouteNodes(driveRaw, walkRaw, transitRaw, baselineDef);
+
+            // Prep Save Trip data
+            window.currentTripPayload = {
+                origin: localStorage.origin || "Unknown Start",
+                dest: localStorage.dest || "Unknown End",
+                dist: baseDist,
+                baselineEmit: baselineFootprint,
+                savedEmit: Math.max(0, worstFootprint - baselineFootprint),
+                modeName: baselineDef.name,
+                icon: baselineDef.icon
+            };
+
+            if (baseDist > 0 && modes.length > 0) {
+                document.getElementById('saveTripBtn').classList.remove('hidden');
+            }
         }
-    }
 
-    function generateRouteNodes(driveR, walkR, transitR, baselineDef) {
-        const routeNodesBox = document.getElementById('routeNodes');
-        
-        const isTransit = baselineDef.name.includes('Bus') || baselineDef.name.includes('Metro') || baselineDef.name.includes('Train');
-        const isWalkCycle = factorDb[localStorage.selectedMain + '_' + localStorage.selectedSub]?.f === 0 || baselineDef.name.includes('E-Bike');
+        function generateRouteNodes(driveR, walkR, transitR, baselineDef) {
+            const routeNodesBox = document.getElementById('routeNodes');
 
-        let stepsHTML = '';
-        
-        // Render simple A to B for cars / normal transit
-        // But if transit, actually pull API steps
-        const drawStep = (title, meta, i, icon, color) => `
+            const isTransit = baselineDef.name.includes('Bus') || baselineDef.name.includes('Metro') || baselineDef.name.includes('Train');
+            const isWalkCycle = factorDb[localStorage.selectedMain + '_' + localStorage.selectedSub]?.f === 0 || baselineDef.name.includes('E-Bike');
+
+            let stepsHTML = '';
+
+            // Render simple A to B for cars / normal transit
+            // But if transit, actually pull API steps
+            const drawStep = (title, meta, i, icon, color) => `
             <div class="relative">
                 <div class="absolute -left-[30px] top-1 w-4 h-4 rounded-full border-[3px] border-white dark:border-slate-800 ${color} z-10 shadow-sm"></div>
-                ${i > 0 ? `<div class="absolute -left-[23px] bottom-4 w-[2px] h-[150%] ${i === 1 ? 'bg-primary dark:bg-primary-dim' : 'bg-gray-200 dark:bg-slate-700'}"></div>` : ''}
+                ${i > 0 ? `<div class="absolute -left-[23px] bottom-4 w-[2px] h-[150%] ${i === 1 ? 'bg-primary dark:bg-primary-dark' : 'bg-gray-200 dark:bg-slate-700'}"></div>` : ''}
                 <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-surface-container-low dark:bg-slate-800 text-gray-500 dark:text-gray-400">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400">
                         <span class="material-symbols-outlined text-[18px]">${icon}</span>
                     </div>
                     <div class="flex-1 mt-0.5">
                         <p class="font-bold text-gray-900 dark:text-white text-[15px] leading-tight">${title}</p>
-                        <p class="text-xs text-on-surface-variant dark:text-slate-400 mt-1.5 font-medium leading-snug">${meta}</p>
+                        <p class="text-xs text-gray-500 dark:text-slate-400 mt-1.5 font-medium leading-snug">${meta}</p>
                     </div>
                 </div>
             </div>`;
 
-        if (isTransit && transitR) {
-            const tr = safeParse(transitR);
-            if (tr && tr.steps) {
-                stepsHTML += drawStep(localStorage.origin, 'Departure', 0, 'location_on', 'bg-green-500');
-                
-                tr.steps.forEach((s, ix) => {
-                    if (s.travel_mode === 'WALKING') {
-                        stepsHTML += drawStep('Walk', `~${s.duration.text} (${s.distance.text})`, ix+1, 'directions_walk', 'bg-gray-400');
-                    } else if (s.travel_mode === 'TRANSIT') {
-                        const l = s.transit.line;
-                        stepsHTML += drawStep(l.short_name || l.name, `Take ${l.vehicle.type} towards ${s.transit.headsign} for ${s.transit.num_stops || ''} stops`, ix+1, baselineDef.icon, 'bg-primary');
-                    }
-                });
-                stepsHTML += drawStep(localStorage.dest, 'Arrival', 99, 'flag', 'bg-red-500');
-            }
-        } else {
-            // Raw generic fallbacks
-            const rt = isWalkCycle ? safeParse(walkR) : safeParse(driveR);
-            stepsHTML += drawStep(localStorage.origin, 'Start Journey', 0, 'location_on', 'bg-green-500');
-            if (rt) {
-               stepsHTML += drawStep('Direct Route', `~${rt.duration.text} via fastest path`, 1, baselineDef.icon, 'bg-primary');
+            if (isTransit && transitR) {
+                const tr = safeParse(transitR);
+                if (tr && tr.steps) {
+                    stepsHTML += drawStep(localStorage.origin, 'Departure', 0, 'location_on', 'bg-green-500');
+
+                    tr.steps.forEach((s, ix) => {
+                        if (s.travel_mode === 'WALKING') {
+                            stepsHTML += drawStep('Walk', `~${s.duration.text} (${s.distance.text})`, ix + 1, 'directions_walk', 'bg-gray-400');
+                        } else if (s.travel_mode === 'TRANSIT') {
+                            const l = s.transit.line;
+                            stepsHTML += drawStep(l.short_name || l.name, `Take ${l.vehicle.type} towards ${s.transit.headsign} for ${s.transit.num_stops || ''} stops`, ix + 1, baselineDef.icon, 'bg-primary');
+                        }
+                    });
+                    stepsHTML += drawStep(localStorage.dest, 'Arrival', 99, 'flag', 'bg-red-500');
+                }
             } else {
-               stepsHTML += drawStep('Route', `Map API calculation`, 1, baselineDef.icon, 'bg-primary');
+                // Raw generic fallbacks
+                const rt = isWalkCycle ? safeParse(walkR) : safeParse(driveR);
+                stepsHTML += drawStep(localStorage.origin, 'Start Journey', 0, 'location_on', 'bg-green-500');
+                if (rt) {
+                    stepsHTML += drawStep('Direct Route', `~${rt.duration.text} via fastest path`, 1, baselineDef.icon, 'bg-primary');
+                } else {
+                    stepsHTML += drawStep('Route', `Map API calculation`, 1, baselineDef.icon, 'bg-primary');
+                }
+                stepsHTML += drawStep(localStorage.dest, 'Arrive at Destination', 2, 'flag', 'bg-red-500');
             }
-            stepsHTML += drawStep(localStorage.dest, 'Arrive at Destination', 2, 'flag', 'bg-red-500');
+
+            routeNodesBox.innerHTML = stepsHTML;
         }
 
-        routeNodesBox.innerHTML = stepsHTML;
-    }
+        function saveCurrentTrip() {
+            if (!window.currentTripPayload) return;
 
-    function saveCurrentTrip() {
-        if (!window.currentTripPayload) return;
-        
-        let existing = [];
-        try {
-            existing = JSON.parse(localStorage.historyTrips || '[]');
-        } catch(e){}
-        
-        existing.push({
-            ...window.currentTripPayload,
-            date: new Date().toISOString()
-        });
-        
-        localStorage.historyTrips = JSON.stringify(existing);
-        
-        const toast = document.getElementById('saveToast');
-        toast.classList.remove('opacity-0', 'translate-y-4');
-        setTimeout(() => toast.classList.add('opacity-0', 'translate-y-4'), 3000);
-        
-        document.getElementById('saveTripBtn').classList.add('scale-110' ,'bg-green-500');
-        setTimeout(() => document.getElementById('saveTripBtn').classList.remove('scale-110','bg-green-500'), 200);
-    }
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        const hasLocalData = localStorage.drivingRoute || localStorage.walkingRoute || localStorage.transitRoute || localStorage.cyclingRoute;
-        
-        if (!sessionStorage.getItem('routeCalculated') && !hasLocalData) {
-            document.body.innerHTML = `
+            let existing = [];
+            try {
+                existing = JSON.parse(localStorage.historyTrips || '[]');
+            } catch (e) { }
+
+            existing.push({
+                ...window.currentTripPayload,
+                date: new Date().toISOString()
+            });
+
+            localStorage.historyTrips = JSON.stringify(existing);
+
+            const toast = document.getElementById('saveToast');
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            setTimeout(() => toast.classList.add('opacity-0', 'translate-y-4'), 3000);
+
+            document.getElementById('saveTripBtn').classList.add('scale-110', 'bg-green-500');
+            setTimeout(() => document.getElementById('saveTripBtn').classList.remove('scale-110', 'bg-green-500'), 200);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const hasLocalData = localStorage.drivingRoute || localStorage.walkingRoute || localStorage.transitRoute || localStorage.cyclingRoute;
+
+            if (!sessionStorage.getItem('routeCalculated') && !hasLocalData) {
+                document.body.innerHTML = `
                 <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center text-gray-500 dark:text-gray-400 bg-surface dark:bg-slate-900 transition-colors">
                     <span class="material-symbols-outlined text-[64px] mb-4 text-gray-300 dark:text-slate-700 shadow-sm rounded-full bg-white dark:bg-slate-800 p-4">route_off</span>
                     <h2 class="text-2xl font-bold font-headline mb-2 text-gray-900 dark:text-white">No route data</h2>
                     <p class="mb-6 font-medium">Go back to the map and calculate a trip.</p>
-                    <a href="index.html" class="bg-primary hover:bg-primary-dim text-white px-8 py-3 rounded-full font-bold shadow-lg transition-colors">Go to Map</a>
+                    <a href="index.html" class="bg-primary dark:bg-primary-dark text-white dark:text-slate-900 px-8 py-3 rounded-full font-bold shadow-lg transition-colors">Go to Map</a>
                 </div>
             `;
-            return;
-        }
-        
-        sessionStorage.removeItem('routeCalculated');
-        
-        // Fetch Key and load background map
-        const loadMapBanner = (key) => {
-            let polyLine = '';
-            if (localStorage.drivingRoute) {
-                 const drv = safeParse(localStorage.drivingRoute);
-                 if(drv && drv.overview_polyline && drv.overview_polyline.points) polyLine = drv.overview_polyline.points;
+                return;
             }
-            const imgEl = document.getElementById('backgroundMap');
-            if (polyLine) {
-                imgEl.src = `https://maps.googleapis.com/maps/api/staticmap?size=800x400&path=enc:${polyLine}&key=${key}&style=feature:all|saturation:-20`;
-            } else {
-                imgEl.src = `https://maps.googleapis.com/maps/api/staticmap?size=800x400&center=Pune,India&zoom=12&key=${key}&style=feature:all|saturation:-20`;
-            }
-        };
 
-        const mapFallback = () => {
-            console.warn('Vercel api not detected, falling back');
-            const localScript = document.createElement('script');
-            localScript.src = 'api-key.js';
-            localScript.onload = () => {
-                if(window.GOOGLE_MAPS_KEY) loadMapBanner(window.GOOGLE_MAPS_KEY);
+            sessionStorage.removeItem('routeCalculated');
+
+            // Fetch Key and load background map with Markers
+            const loadMapMarkers = (key) => {
+                const loadScript = document.createElement('script');
+                loadScript.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=geometry`;
+                loadScript.onload = () => {
+                    const mapDiv = document.getElementById('mapContainer');
+                    const r = localStorage.drivingRoute || localStorage.walkingRoute || localStorage.transitRoute || localStorage.cyclingRoute;
+                    if (!r) return;
+                    const parsed = safeParse(r);
+                    if (!parsed || !parsed.overview_polyline) return;
+
+                    const path = google.maps.geometry.encoding.decodePath(parsed.overview_polyline);
+                    if (path.length < 2) return;
+
+                    const start = path[0];
+                    const end = path[path.length - 1];
+
+                    const bounds = new google.maps.LatLngBounds();
+                    bounds.extend(start);
+                    bounds.extend(end);
+
+                    const map = new google.maps.Map(mapDiv, {
+                        center: bounds.getCenter(),
+                        disableDefaultUI: true,
+                        zoomControl: false,
+                        gestureHandling: 'cooperative',
+                        styles: document.documentElement.classList.contains('dark') ? darkMapStyle : []
+                    });
+                    window.ecoMap = map;
+
+                    map.fitBounds(bounds, { top: 50, bottom: 200, left: 50, right: 50 }); // Pad bottom for sheet
+
+                    new google.maps.Marker({ position: start, map: map, title: "Origin", icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png' });
+                    new google.maps.Marker({ position: end, map: map, title: "Destination", icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' });
+                };
+                document.head.appendChild(loadScript);
             };
-            document.head.appendChild(localScript);
-        };
 
-        fetch('/api/maps-key')
-            .then(r => r.ok ? r.json() : Promise.reject('Not Vercel environment'))
-            .then(data => {
-                if(!data.key) throw new Error(); 
-                loadMapBanner(data.key);
-            })
-            .catch(mapFallback);
+            fetch('/api/maps-key')
+                .then(r => r.ok ? r.json() : Promise.reject('Not Vercel environment'))
+                .then(data => { if (data.key) loadMapMarkers(data.key); })
+                .catch(() => {
+                    const ls = document.createElement('script');
+                    ls.src = 'api-key.js';
+                    ls.onload = () => { if (window.GOOGLE_MAPS_KEY) loadMapMarkers(window.GOOGLE_MAPS_KEY); };
+                    document.head.appendChild(ls);
+                });
 
-        generateAnalysis();
-    });
+            generateAnalysis();
+        });
 
-    renderNav('result');
-</script>
+        renderNav('impact');
+    </script>
 </body>
+
 </html>

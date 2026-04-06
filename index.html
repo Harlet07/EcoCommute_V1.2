@@ -27,56 +27,28 @@
             theme: {
                 extend: {
                     colors: {
-                        "on-primary-fixed-variant": "#006a2d",
-                        "surface-container": "#e5e9eb",
-                        "inverse-primary": "#6bff8f",
-                        "tertiary-fixed-dim": "#73a2ff",
-                        "primary-fixed": "#6bff8f",
-                        "on-tertiary": "#f0f2ff",
-                        "on-secondary-fixed-variant": "#535b71",
-                        "surface-dim": "#d0d5d8",
-                        "on-secondary-fixed": "#373f54",
-                        "primary-fixed-dim": "#5bf083",
-                        "surface-bright": "#f5f7f9",
-                        "secondary": "#535b71",
-                        "on-background": "#2c2f31",
-                        "surface-tint": "#006a2d",
-                        "on-primary-container": "#005f28",
-                        "on-tertiary-fixed": "#00163b",
-                        "on-tertiary-container": "#002e6a",
-                        "tertiary": "#0057bd",
-                        "outline-variant": "#abadaf",
-                        "secondary-dim": "#484f65",
-                        "error-dim": "#b92902",
-                        "surface-variant": "#d9dde0",
-                        "surface-container-highest": "#d9dde0",
-                        "surface-container-lowest": "#ffffff",
-                        "on-secondary": "#f0f2ff",
-                        "surface": "#f5f7f9",
-                        "inverse-surface": "#0b0f10",
-                        "on-error": "#ffefec",
-                        "primary": "#006a2d",
-                        "tertiary-container": "#8ab0ff",
-                        "inverse-on-surface": "#9a9d9f",
-                        "outline": "#747779",
-                        "secondary-fixed-dim": "#ccd4ee",
-                        "secondary-container": "#dae2fd",
-                        "background": "#f5f7f9",
-                        "on-secondary-container": "#4a5167",
-                        "tertiary-fixed": "#8ab0ff",
-                        "on-primary-fixed": "#004a1d",
-                        "primary-container": "#6bff8f",
-                        "error": "#b02500",
-                        "surface-container-low": "#eef1f3",
-                        "error-container": "#f95630",
-                        "on-surface": "#2c2f31",
-                        "secondary-fixed": "#dae2fd",
-                        "surface-container-high": "#dfe3e6",
-                        "on-tertiary-fixed-variant": "#00377b",
-                        "primary-dim": "#005d26",
-                        "tertiary-dim": "#004ca6",
-                        "on-error-container": "#520c00",
-                        "on-primary": "#ceffd0"
+                        primary: "#1c753e",
+                        "primary-dim": "#0a2219",
+                        "primary-dark": "#79e2a8",
+                        "primary-dark-dim": "#5fc98f",
+                        surface: "#e6f5ea",
+                        slate: {
+                            400: '#8fb5a2',
+                            500: '#8fb5a2',
+                            600: '#15412e',
+                            700: '#133829',
+                            800: '#0b261a',
+                            900: '#071510',
+                        },
+                        gray: {
+                            50: '#f7fcf9',
+                            100: '#eefaf2',
+                            300: '#d1e8d9',
+                            400: '#8fb5a2',
+                            500: '#4a6056',
+                            700: '#274737',
+                            900: '#1c753e',
+                        },
                     },
                     fontFamily: {
                         "headline": ["Plus Jakarta Sans"],
@@ -162,7 +134,7 @@
         <div
             class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-[0_20px_40px_-15px_rgba(0,106,45,0.1)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] p-6 transition-colors duration-300">
             <div class="mb-4">
-                <label
+                <label for="origin"
                     class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 block pl-2">From</label>
                 <div class="relative">
                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-green-500 font-bold text-sm">A</span>
@@ -173,7 +145,7 @@
             </div>
 
             <div class="flex items-center gap-3 mb-4 opacity-100 hover:scale-110 transition-transform justify-center">
-                <button
+                <button aria-label="Swap origin and destination"
                     onclick="const o=document.getElementById('origin').value; document.getElementById('origin').value=document.getElementById('dest').value; document.getElementById('dest').value=o;"
                     class="w-10 h-10 rounded-full border-2 border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:border-green-300 transition-all">
                     <span class="material-symbols-outlined text-[20px]">swap_vert</span>
@@ -181,7 +153,7 @@
             </div>
 
             <div class="mb-6">
-                <label
+                <label for="dest"
                     class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 block pl-2">To</label>
                 <div class="relative">
                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-red-500 font-bold text-sm">B</span>
@@ -203,7 +175,7 @@
             </div>
 
             <button id="calculateBtn" disabled
-                class="w-full bg-primary hover:bg-primary-dim text-white py-4 rounded-full font-headline font-bold text-[15px] shadow-[0_8px_20px_rgba(0,106,45,0.25)] dark:shadow-[0_8px_20px_rgba(107,255,143,0.15)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-2 opacity-50">
+                class="w-full bg-primary dark:bg-primary-dark hover:bg-primary-dim dark:hover:bg-primary-dark-dim text-white dark:text-slate-900 py-4 rounded-full font-headline font-bold text-[15px] shadow-[0_8px_20px_rgba(12,43,32,0.25)] dark:shadow-[0_8px_20px_rgba(121,226,168,0.15)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-2 opacity-50">
                 Loading Maps... <span class="material-symbols-outlined text-lg animate-spin">refresh</span>
             </button>
         </div>
@@ -239,10 +211,15 @@
                 </button>
             </div>
         </div>
+
+        <div id="errorToast" class="fixed top-24 left-1/2 -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-full relative z-50 flex items-center gap-2 shadow-md transition-all duration-300 opacity-0 pointer-events-none translate-y-4">
+            <span class="material-symbols-outlined text-[18px]">error</span>
+            <span id="errorMsg" class="font-medium text-sm"></span>
+        </div>
     </main>
 
     <nav id="bottomNav"
-        class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 bg-white dark:bg-slate-900 rounded-t-[3rem] border-none shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.5)] transition-colors duration-300">
+        class="fixed bottom-4 left-4 right-4 z-50 flex justify-around items-center px-4 py-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] border border-gray-100 dark:border-slate-700/50 shadow-[0_20px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.4)] transition-colors duration-300">
     </nav>
 
     <script>
@@ -281,6 +258,7 @@
                 const btn = document.createElement('button');
                 const isActive = (currentSub === s.id);
                 btn.className = `px-3 py-1.5 text-[12px] font-semibold rounded-full border-2 transition-all ${isActive ? 'bg-green-100 dark:bg-green-900/40 border-green-500 text-green-700 dark:text-green-300 shadow-sm' : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 text-gray-500 hover:border-green-300 dark:hover:border-green-500'}`;
+                btn.setAttribute('aria-pressed', isActive);
                 btn.textContent = s.label;
                 btn.onclick = () => { currentSub = s.id; renderSubcategories(currentMain); };
                 subList.appendChild(btn);
@@ -292,7 +270,8 @@
             transportModes.forEach(m => {
                 const isActive = (currentMain === m.id);
                 const btn = document.createElement('button');
-                btn.className = `flex-shrink-0 flex items-center gap-2 px-4 py-3 rounded-2xl border-2 transition-all min-w-[100px] justify-center ${isActive ? 'bg-primary border-primary text-white shadow-[0_4px_12px_rgba(0,106,45,0.2)] dark:shadow-none' : 'bg-gray-50 dark:bg-slate-900/50 border-gray-100 dark:border-slate-700 text-gray-500 dark:text-gray-400 hover:border-green-300'}`;
+                btn.className = `flex-shrink-0 flex items-center gap-2 px-4 py-3 rounded-2xl border-2 transition-all min-w-[100px] justify-center ${isActive ? 'bg-primary dark:bg-primary-dark border-primary dark:border-primary-dark text-white dark:text-slate-900 shadow-md' : 'bg-white dark:bg-slate-800/50 border-gray-100 dark:border-slate-700 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-600'}`;
+                btn.setAttribute('aria-pressed', isActive);
                 btn.innerHTML = `<span class="material-symbols-outlined" style="${isActive ? "font-variation-settings: 'FILL' 1" : ""}">${m.icon}</span><span class="text-sm font-bold tracking-wide">${m.label}</span>`;
                 btn.onclick = () => {
                     currentMain = m.id;
@@ -315,6 +294,14 @@
 
         renderMainCategories(); renderSubcategories(currentMain);
 
+        // Error Toast Logic
+        function showError(msg) {
+            const toast = document.getElementById('errorToast');
+            document.getElementById('errorMsg').innerText = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            setTimeout(() => toast.classList.add('opacity-0', 'translate-y-4'), 3000);
+        }
+
         // API Loading & Route Fetching
         const loadMapsScripts = (key) => {
             const loadScript = document.createElement('script');
@@ -332,7 +319,7 @@
                 else document.getElementById('calculateBtn').innerHTML = 'API Key Missing (Local)';
             };
             localScript.onerror = () => {
-                document.getElementById('calculateBtn').innerHTML = 'Run via Vercel Dev or create api-key.js';
+                document.getElementById('calculateBtn').innerHTML = 'Service Unavailable';
             };
             document.head.appendChild(localScript);
         };
@@ -348,6 +335,9 @@
             .catch(tryLocalFallback);
 
         function initMapsEngine() {
+            new google.maps.places.Autocomplete(document.getElementById('origin'));
+            new google.maps.places.Autocomplete(document.getElementById('dest'));
+
             const btn = document.getElementById('calculateBtn');
             btn.disabled = false;
             btn.classList.remove('opacity-50');
@@ -358,9 +348,9 @@
                 
                 const origin = document.getElementById('origin').value.trim();
                 const dest = document.getElementById('dest').value.trim();
-                if (!origin || !dest) return alert('Enter origin and destination');
+                if (!origin || !dest) return showError('Enter origin and destination');
 
-                btn.innerHTML = 'Calculating...';
+                btn.innerHTML = `Calculating... <span class="material-symbols-outlined text-lg animate-spin">refresh</span>`;
                 btn.disabled = true;
 
                 localStorage.origin = origin;
@@ -396,8 +386,8 @@
                     const cy = mapLeg(bicycling);
 
                     if (!dr && !wa && !tr && !cy) {
-                        alert('No route available for this specific query');
-                        btn.innerHTML = 'Calculate Impact <span class="material-symbols-outlined text-lg">arrow_forward</span>';
+                        showError('No route available for this specific query');
+                        btn.innerHTML = `Calculate Impact <span class="material-symbols-outlined text-lg">arrow_forward</span>`;
                         btn.disabled = false;
                         return;
                     }
@@ -410,8 +400,8 @@
                     sessionStorage.setItem('routeCalculated', 'true');
                     window.location.href = 'result.html';
                 } catch (e) {
-                    alert('Wait for Maps API to load, or connection error');
-                    btn.innerHTML = 'Calculate Impact <span class="material-symbols-outlined text-lg">arrow_forward</span>';
+                    showError('Connection error. Try again.');
+                    btn.innerHTML = `Calculate Impact <span class="material-symbols-outlined text-lg">arrow_forward</span>`;
                     btn.disabled = false;
                 }
             };

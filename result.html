@@ -257,6 +257,25 @@
             'non_motorized_cycling': { name: 'Cycling', icon: 'directions_bike', f: 0 },
             'non_motorized_ebike': { name: 'E-Bike', icon: 'electric_bike', f: 10 }
         };
+        const capacityDb = {
+            car: 5,
+            two_wheeler: 2,
+            auto_rickshaw: 3,
+            bus: 50,
+            train: 300,
+            metro: 500,
+            non_motorized: 1
+        };
+
+        const costDb = {
+            'car_petrol': 8, 'car_diesel': 7, 'car_cng': 5, 'car_hybrid_petrol': 5, 'car_hybrid_plugin': 5, 'car_electric': 2,
+            'two_wheeler_motorcycle_small': 3, 'two_wheeler_motorcycle_large': 3, 'two_wheeler_scooter_petrol': 3, 'two_wheeler_scooter_electric': 1, 'two_wheeler_motorcycle_electric': 1,
+            'auto_rickshaw_cng': 15, 'auto_rickshaw_electric': 15,
+            'bus_diesel': 1.5, 'bus_cng': 1.5, 'bus_electric': 1.5,
+            'train_diesel': 2, 'train_electric': 2,
+            'metro_electric': 2,
+            'non_motorized_walking': 0, 'non_motorized_cycling': 0, 'non_motorized_ebike': 0
+        };
 
         let currentSort = 'emissions';
 
@@ -270,6 +289,8 @@
 
         function generateAnalysis() {
             console.log("Running analysis");
+            
+            const passCount = parseInt(localStorage.passengers, 10) || 1;
 
             const driveRaw = localStorage.drivingRoute;
             const walkRaw = localStorage.walkingRoute;
@@ -310,7 +331,33 @@
                         Object.keys(factorDb).filter(k => k.startsWith(cat)).forEach(key => {
                             const isBase = key === selKey;
                             if (isBase) { baseDist = dKm; baseTime = tMin; }
-                            modes.push({ id: key, em: factorDb[key].f * dKm, time: tMin, base: isBase, name: factorDb[key].name, icon: factorDb[key].icon });
+                            
+                            let category;
+                            if (key.startsWith('two_wheeler')) category = 'two_wheeler';
+                            else if (key.startsWith('auto_rickshaw')) category = 'auto_rickshaw';
+                            else if (key.startsWith('non_motorized')) category = 'non_motorized';
+                            else category = key.split('_')[0];
+
+                            const capacity = capacityDb[category] || passCount;
+                            const baseEmission = factorDb[key].f * dKm;
+                            
+                            let vehicles = 1;
+                            let totalEmission;
+                            let perPerson;
+                            let feasible = true;
+
+                            if (passCount <= capacity) {
+                                totalEmission = baseEmission;
+                                perPerson = totalEmission / passCount;
+                            } else {
+                                vehicles = Math.ceil(passCount / capacity);
+                                totalEmission = vehicles * baseEmission;
+                                perPerson = totalEmission / passCount;
+                                feasible = false;
+                            }
+
+                            const totCost = (costDb[key] || 0) * dKm * vehicles;
+                            modes.push({ id: key, em: perPerson, totalEm: totalEmission, vehicles: vehicles, feasible: feasible, capacity: capacity, time: tMin, base: isBase, name: factorDb[key].name, icon: factorDb[key].icon, cost: totCost, dKm: dKm });
                         });
                     });
                 }
@@ -329,7 +376,20 @@
                         const isBase = key === selKey;
                         const t = key.includes('cycling') || key.includes('ebike') ? tMinBike : tMinWalk;
                         if (isBase) { baseDist = dKm; baseTime = t; }
-                        modes.push({ id: key, em: factorDb[key].f * dKm, time: t, base: isBase, name: factorDb[key].name, icon: factorDb[key].icon });
+                        
+                        const capacity = 1;
+                        const baseEmission = factorDb[key].f * dKm;
+                        
+                        let vehicles = 1;
+                        let feasible = true;
+                        let totalEmission = baseEmission;
+                        let perPerson = totalEmission; // No division for non_motorized
+
+                        const totCost = (costDb[key] || 0) * dKm;
+                        let calories = 0;
+                        if (key.includes('walking')) calories = Math.round(50 * dKm);
+                        if (key.includes('cycling') || key.includes('ebike')) calories = Math.round(30 * dKm);
+                        modes.push({ id: key, em: perPerson, totalEm: totalEmission, vehicles: vehicles, feasible: feasible, capacity: capacity, time: t, base: isBase, name: factorDb[key].name, icon: factorDb[key].icon, cost: totCost, dKm: dKm, calories: calories });
                     });
                 }
             }
@@ -345,7 +405,33 @@
                         Object.keys(factorDb).filter(k => k.startsWith(cat)).forEach(key => {
                             const isBase = key === selKey;
                             if (isBase) { baseDist = dKm; baseTime = tMin; }
-                            modes.push({ id: key, em: factorDb[key].f * dKm, time: tMin, base: isBase, name: factorDb[key].name, icon: factorDb[key].icon });
+                            
+                            let category;
+                            if (key.startsWith('two_wheeler')) category = 'two_wheeler';
+                            else if (key.startsWith('auto_rickshaw')) category = 'auto_rickshaw';
+                            else if (key.startsWith('non_motorized')) category = 'non_motorized';
+                            else category = key.split('_')[0];
+
+                            const capacity = capacityDb[category] || passCount;
+                            const baseEmission = factorDb[key].f * dKm;
+                            
+                            let vehicles = 1;
+                            let totalEmission;
+                            let perPerson;
+                            let feasible = true;
+
+                            if (passCount <= capacity) {
+                                totalEmission = baseEmission;
+                                perPerson = totalEmission / passCount;
+                            } else {
+                                vehicles = Math.ceil(passCount / capacity);
+                                totalEmission = vehicles * baseEmission;
+                                perPerson = totalEmission / passCount;
+                                feasible = false;
+                            }
+
+                            const totCost = (costDb[key] || 0) * dKm * vehicles;
+                            modes.push({ id: key, em: perPerson, totalEm: totalEmission, vehicles: vehicles, feasible: feasible, capacity: capacity, time: tMin, base: isBase, name: factorDb[key].name, icon: factorDb[key].icon, cost: totCost, dKm: dKm });
                         });
                     });
                 }
@@ -367,29 +453,35 @@
             document.getElementById('timeVal').innerText = `${baseTime} mins`;
 
             // Compute baseline carbon footprint for top badge
-            const baselineFootprint = factorDb[selKey].f * baseDist;
+            const baselineDefObj = modes.find(m => m.base) || modes[0] || { em: 0, totalEm: 0 };
+            const baselineFootprint = baselineDefObj.em;
+            const baselineFootprintTot = baselineDefObj.totalEm;
             const worstFootprint = Math.max(...modes.map(m => m.em));
             if (baselineFootprint === 0) {
                 document.getElementById('headerValue').innerText = '100% Eco';
                 document.getElementById('headerBadge').innerText = '0 Emissions';
             } else {
                 const saved = Math.max(0, 100 - (baselineFootprint / worstFootprint * 100));
-                document.getElementById('headerValue').innerText = `${Math.round(saved)}% Saved`;
-                document.getElementById('headerBadge').innerText = `${Math.round(baselineFootprint)}g Total Impact`;
+                document.getElementById('headerValue').innerHTML = `${Math.round(saved)}% Saved <div class="text-sm font-medium text-green-200 mt-1 opacity-90">${Math.round(baselineFootprintTot)}g total for ${passCount}</div>`;
+                document.getElementById('headerBadge').innerText = `${Math.round(baselineFootprint)}g Per Person`;
             }
 
             // Ranking Logic: Primary (emissions desc), Secondary (time desc)
-            if (currentSort === 'emissions') {
-                modes.sort((a, b) => {
+            const sortFn = (a, b) => {
+                if (currentSort === 'emissions') {
                     if (Math.round(a.em) !== Math.round(b.em)) return a.em - b.em;
-                    return a.time - b.time; // Tie-breaker: Time
-                });
-            } else {
-                modes.sort((a, b) => {
+                    return a.time - b.time;
+                } else {
                     if (a.time !== b.time) return a.time - b.time;
-                    return a.em - b.em; // Tie-breaker: Emissions
-                });
-            }
+                    return a.em - b.em;
+                }
+            };
+            
+            const uniqueModes = [];
+            modes.forEach(m => { if (!uniqueModes.find(u => u.name === m.name)) uniqueModes.push(m); });
+            
+            const feasibleModes = uniqueModes.filter(m => m.feasible).sort(sortFn);
+            const scaledModes = uniqueModes.filter(m => !m.feasible).sort(sortFn);
 
             // Active Toggle State
             document.getElementById('sortEmission').className = currentSort === 'emissions'
@@ -400,39 +492,34 @@
                 ? 'px-3 py-1 rounded-full bg-primary dark:bg-primary-dark text-white dark:text-slate-900 text-sm shadow-md transition-all'
                 : 'px-3 py-1 rounded-full bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-slate-400 text-sm transition-all hover:bg-gray-300 dark:hover:bg-slate-700';
 
-            // Dedup safety (if logic caused double inserts)
-            const uniqueModes = [];
-            modes.forEach(m => { if (!uniqueModes.find(u => u.name === m.name)) uniqueModes.push(m); });
-
             // Rendering Comparison Chart
-            const validEmissions = uniqueModes.filter(m => !m.noData).map(m => m.em);
-            const maxEm = Math.max(...validEmissions, 10);
+            const maxEm = Math.max(...uniqueModes.filter(m => !m.noData).map(m => m.em), 10);
 
-            let listHtml = uniqueModes.map((m, idx) => {
-                if (m.noData) {
-                    return `
-                <div class="space-y-2 opacity-50">
-                    <div class="flex justify-between text-sm font-medium px-1 text-gray-400">
-                        <span class="flex items-center gap-2"><span class="material-symbols-outlined text-sm">${m.icon}</span> ${m.name}</span>
-                        <span>Not available for this route</span>
-                    </div>
-                    <div class="h-3 w-full bg-gray-100 dark:bg-slate-700 rounded-full border border-dashed border-gray-400"></div>
-                </div>`;
-                }
+            const renderSection = (modeArray) => modeArray.map((m, idx) => {
+                if (m.noData) return '';
 
                 const p = Math.max(2, (m.em / maxEm) * 100);
                 const isBase = m.base;
                 const barBg = isBase ? 'bg-primary dark:bg-primary-dark' : 'bg-gray-400 dark:bg-slate-500';
                 const valCol = isBase ? 'text-primary dark:text-primary-dark font-extrabold' : 'text-gray-900 dark:text-gray-100 font-bold';
 
+                let badges = `<span class="bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded text-[10px] font-bold">₹${Math.round(m.cost)}</span>`;
+                if (m.calories > 0) badges += `<span class="bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 px-2 py-0.5 rounded text-[10px] font-bold inline-block ml-1">🔥 ${m.calories} kcal</span>`;
+
+                let valHtml = `<div class="text-right"><div class="${valCol} text-sm">${Math.round(m.em)}g pp</div><div class="text-[10px] text-gray-400 opacity-80 leading-none mt-0.5">${Math.round(m.totalEm)}g tot</div></div>`;
+                let nameLabel = `${m.name} ${!m.feasible ? `<span class="text-[11px] text-orange-500 font-bold ml-1">(${m.vehicles} vehicles)</span>` : ''}`;
+
                 return `
             <div class="space-y-2">
-                <div class="flex justify-between text-sm font-medium px-1">
-                    <span class="flex items-center gap-2 ${isBase ? 'text-primary dark:text-primary-dark font-extrabold' : 'text-gray-700 dark:text-slate-300'}">
-                        <span class="material-symbols-outlined text-sm" ${isBase ? "style=\"font-variation-settings: 'FILL' 1;\"" : ""}>${m.icon}</span> 
-                        ${m.name} <span class="text-xs text-gray-400 opacity-80">(~${m.time}m)</span>
-                    </span>
-                    <span class="${valCol}">${Math.round(m.em)}g</span>
+                <div class="flex justify-between items-start font-medium px-1">
+                    <div class="flex flex-col gap-1">
+                        <span class="flex items-center gap-1.5 text-sm ${isBase ? 'text-primary dark:text-primary-dark font-extrabold' : 'text-gray-700 dark:text-slate-300'}">
+                            <span class="material-symbols-outlined text-sm" ${isBase ? "style=\"font-variation-settings: 'FILL' 1;\"" : ""}>${m.icon}</span> 
+                            ${nameLabel} <span class="text-xs text-gray-400 opacity-80">(${m.time}m)</span>
+                        </span>
+                        <div class="flex items-center mt-0.5">${badges}</div>
+                    </div>
+                    ${valHtml}
                 </div>
                 <div class="h-3 w-full bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div class="h-full ${barBg} rounded-full" style="width: ${p}%"></div>
@@ -440,8 +527,69 @@
             </div>`;
             }).join('');
 
-            document.getElementById('emissionsList').innerHTML = listHtml +
-                `<p class="text-[10px] text-gray-400 dark:text-gray-500 mt-2 italic px-1">* EV figures include India grid carbon intensity (~700g CO₂/kWh).</p>`;
+            let listHtml = '';
+            if (feasibleModes.length > 0) {
+                listHtml += `<div class="mb-5 pb-2 text-sm font-bold text-gray-600 dark:text-gray-300 flex items-center gap-1.5 border-b border-gray-100 dark:border-slate-700"><span class="material-symbols-outlined text-green-500 text-[18px]">check_circle</span> Available for your group</div>`;
+                listHtml += `<div class="space-y-6">${renderSection(feasibleModes)}</div>`;
+            }
+            if (scaledModes.length > 0) {
+                listHtml += `<div class="mt-8 mb-5 pb-2 text-sm font-bold text-orange-500 flex items-center gap-1.5 border-b border-gray-100 dark:border-slate-700"><span class="material-symbols-outlined text-[18px]">warning</span> Requires multiple vehicles</div>`;
+                listHtml += `<div class="space-y-6">${renderSection(scaledModes)}</div>`;
+            }
+
+            let recommendationHtml = '';
+            if (passCount > 0 && uniqueModes.length > 0) {
+                const validM = uniqueModes.filter(m => !m.noData);
+                if (validM.length > 0) {
+                    const fastest = validM.reduce((prev, curr) => prev.time < curr.time ? prev : curr);
+                    const maxT = Math.max(...validM.map(m=>m.time));
+                    const maxE = Math.max(...validM.map(m=>m.em));
+                    const balanced = validM.reduce((prev, curr) => {
+                        const pScore = (maxT ? prev.time/maxT : 0) + (maxE ? prev.em/maxE : 0);
+                        const cScore = (maxT ? curr.time/maxT : 0) + (maxE ? curr.em/maxE : 0);
+                        return pScore < cScore ? prev : curr;
+                    });
+                    const timeDiff = balanced.time - fastest.time;
+                    const emDiffPct = worstFootprint ? Math.round(((worstFootprint - balanced.em)/worstFootprint)*100) : 0;
+                    let timeText = timeDiff > 0 ? `only ${timeDiff} mins slower than fastest` : 'the absolute fastest route';
+                    let emText = emDiffPct > 0 ? `${emDiffPct}% less emissions` : 'Zero emissions';
+                    if (balanced.em === 0) emText = '100% Eco-friendly';
+
+                    recommendationHtml = `
+                    <div class="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-3xl p-4 flex gap-4 items-start shadow-sm">
+                        <div class="bg-white dark:bg-green-800 w-10 h-10 rounded-full flex items-center justify-center shadow-sm flex-shrink-0 text-green-600 dark:text-green-300">
+                            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-green-900 dark:text-green-100 flex items-center gap-1">Top Recommendation</h4>
+                            <p class="text-xs text-green-700 dark:text-green-300 font-medium mt-1">
+                                Consider taking <b>${balanced.name}</b>. It is ${emText} and is ${timeText}.
+                            </p>
+                        </div>
+                    </div>`;
+                }
+            }
+
+            const yearlyEm = (baselineFootprint * 365) / 1000;
+            const bestEm = uniqueModes.length ? (Math.min(...uniqueModes.map(m => m.em)) * 365) / 1000 : 0;
+            let projHtml = `
+            <div class="mt-8 bg-gray-100 dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-700/50">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="material-symbols-outlined text-orange-500">calendar_month</span>
+                    <h3 class="font-headline font-bold text-lg text-gray-900 dark:text-slate-100">Annual Projection</h3>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-400 font-medium leading-relaxed mt-3">
+                    If you commute daily (one-way): <b class="text-gray-900 dark:text-slate-200">${yearlyEm.toFixed(1)} kg/year</b> per person.
+                </p>
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700 flex gap-4 items-center">
+                    <div class="flex-1">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Switching to the best alternative reduces this to <b>${bestEm.toFixed(1)} kg/year</b>.</p>
+                    </div>
+                </div>
+            </div>`;
+
+            document.getElementById('emissionsList').innerHTML = recommendationHtml + listHtml +
+                `<p class="text-[10px] text-gray-400 dark:text-gray-500 mt-2 italic px-1">* EV figures include India grid carbon intensity (~700g CO₂/kWh).</p>` + projHtml;
 
             // Rendering Route Details Native to API
             generateRouteNodes(driveRaw, walkRaw, transitRaw, baselineDef);
@@ -451,8 +599,11 @@
                 origin: localStorage.origin || "Unknown Start",
                 dest: localStorage.dest || "Unknown End",
                 dist: baseDist,
-                baselineEmit: baselineFootprint,
+                passengers: passCount,
+                baselineEmit: baselineFootprintTot,
                 savedEmit: Math.max(0, worstFootprint - baselineFootprint),
+                perPersonEmission: baselineFootprint,
+                totalEmission: baselineFootprintTot,
                 modeName: baselineDef.name,
                 icon: baselineDef.icon
             };
@@ -563,34 +714,68 @@
                 loadScript.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=geometry`;
                 loadScript.onload = () => {
                     const mapDiv = document.getElementById('mapContainer');
-                    const r = localStorage.drivingRoute || localStorage.walkingRoute || localStorage.transitRoute || localStorage.cyclingRoute;
-                    if (!r) return;
-                    const parsed = safeParse(r);
-                    if (!parsed || !parsed.overview_polyline) return;
+                    const dr = safeParse(localStorage.drivingRoute);
+                    const wr = safeParse(localStorage.walkingRoute);
+                    const tr = safeParse(localStorage.transitRoute);
 
-                    const path = google.maps.geometry.encoding.decodePath(parsed.overview_polyline);
-                    if (path.length < 2) return;
+                    if (!dr && !wr && !tr) return;
 
-                    const start = path[0];
-                    const end = path[path.length - 1];
-
+                    const activeMain = localStorage.selectedMain || 'car';
                     const bounds = new google.maps.LatLngBounds();
-                    bounds.extend(start);
-                    bounds.extend(end);
-
+                    
                     const map = new google.maps.Map(mapDiv, {
-                        center: bounds.getCenter(),
+                        center: {lat: 18.5204, lng: 73.8567},
                         disableDefaultUI: true,
                         zoomControl: false,
                         gestureHandling: 'cooperative',
                         styles: document.documentElement.classList.contains('dark') ? darkMapStyle : []
                     });
                     window.ecoMap = map;
+                    
+                    // Clear old polylines if reloading
+                    if (window.ecoPolylines) window.ecoPolylines.forEach(p => p.setMap(null));
+                    window.ecoPolylines = [];
 
-                    map.fitBounds(bounds, { top: 50, bottom: 200, left: 50, right: 50 }); // Pad bottom for sheet
+                    const drawPolyline = (routeObj, color, isBase) => {
+                        if (!routeObj || !routeObj.overview_polyline) return;
+                        // For paths we need to handle "overview_polyline.points" or "overview_polyline" if it's already a string.
+                        // The structure stored is generally { overview_polyline: "string" } for simplified routes or { overview_polyline: { points: "string" } } for full DirectionsResult
+                        const enc = typeof routeObj.overview_polyline === 'string' ? routeObj.overview_polyline : routeObj.overview_polyline.points;
+                        if (!enc) return;
+                        
+                        const path = google.maps.geometry.encoding.decodePath(enc);
+                        if (path.length > 0) {
+                            path.forEach(pt => bounds.extend(pt));
+                            const poly = new google.maps.Polyline({
+                                path: path,
+                                geodesic: true,
+                                strokeColor: color,
+                                strokeOpacity: isBase ? 1.0 : 0.35,
+                                strokeWeight: isBase ? 6 : 3,
+                                zIndex: isBase ? 100 : 10
+                            });
+                            poly.setMap(map);
+                            window.ecoPolylines.push(poly);
+                            return path;
+                        }
+                        return null;
+                    };
 
-                    new google.maps.Marker({ position: start, map: map, title: "Origin", icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png' });
-                    new google.maps.Marker({ position: end, map: map, title: "Destination", icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' });
+                    const rpD = drawPolyline(dr, '#10b981', ['car', 'two_wheeler', 'auto_rickshaw'].includes(activeMain)); // Green
+                    const rpT = drawPolyline(tr, '#3b82f6', ['bus', 'train', 'metro'].includes(activeMain)); // Blue
+                    const rpW = drawPolyline(wr, '#f97316', ['non_motorized'].includes(activeMain)); // Orange
+
+                    if (!bounds.isEmpty()) {
+                        map.fitBounds(bounds, { top: 50, bottom: 200, left: 50, right: 50 });
+                    }
+
+                    const validP = rpD || rpT || rpW;
+                    if (validP && validP.length > 0) {
+                        const start = validP[0];
+                        const end = validP[validP.length - 1];
+                        new google.maps.Marker({ position: start, map: map, title: "Origin", icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png' });
+                        new google.maps.Marker({ position: end, map: map, title: "Destination", icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' });
+                    }
                 };
                 document.head.appendChild(loadScript);
             };

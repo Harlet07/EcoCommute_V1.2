@@ -141,6 +141,20 @@
             </div>
         </div>
 
+        <!-- Weekly/Monthly Dashboard -->
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-[0_8px_20px_-10px_rgba(0,0,0,0.05)] border border-gray-100 dark:border-slate-700/50">
+                <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">This Week</p>
+                <h3 class="font-headline font-bold text-2xl text-gray-900 dark:text-slate-100" id="weekSaved">0.0 kg</h3>
+                <p class="text-xs text-green-600 dark:text-green-400 font-medium mt-1"><span id="weekTrips">0</span> trips</p>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-[0_8px_20px_-10px_rgba(0,0,0,0.05)] border border-gray-100 dark:border-slate-700/50">
+                <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">This Month</p>
+                <h3 class="font-headline font-bold text-2xl text-gray-900 dark:text-slate-100" id="monthSaved">0.0 kg</h3>
+                <p class="text-xs text-green-600 dark:text-green-400 font-medium mt-1"><span id="monthTrips">0</span> trips</p>
+            </div>
+        </div>
+
         <!-- Trip List -->
         <div class="flex flex-col gap-4" id="tripList">
             <!-- Populated via Javascript -->
@@ -197,23 +211,35 @@
 
             let totalEmits = 0;
             let totalSaved = 0;
+            let weekSaved = 0, weekCount = 0;
+            let monthSaved = 0, monthCount = 0;
+            const now = new Date().getTime();
+            const weekMs = 7 * 24 * 60 * 60 * 1000;
+            const monthMs = 30 * 24 * 60 * 60 * 1000;
             
             // Generate newest first array
             const reversedHistory = [...history].reverse();
 
             list.innerHTML = reversedHistory.map((t, idx) => {
-                totalSaved += (t.savedEmit || 0);
-                totalEmits += (t.baselineEmit || 0);
+                const tripSaved = t.savedEmit || 0;
+                const tripEmit = (t.perPersonEmission !== undefined ? t.perPersonEmission : t.baselineEmit) || 0;
+                
+                totalSaved += tripSaved;
+                totalEmits += tripEmit;
+                
+                const tDate = new Date(t.date).getTime();
+                if (now - tDate <= weekMs) { weekSaved += tripSaved; weekCount++; }
+                if (now - tDate <= monthMs) { monthSaved += tripSaved; monthCount++; }
                 
                 const dateStr = new Date(t.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
                 const originS = t.origin.split(',')[0];
                 const destS = t.dest.split(',')[0];
 
                 let badgeHtml = '';
-                if (t.savedEmit > 0) {
+                if (tripSaved > 0) {
                    badgeHtml = `<div class="text-xs text-green-600 dark:text-green-400 font-bold flex items-center gap-0.5">
                                     <span class="material-symbols-outlined text-[14px]">arrow_downward</span>
-                                    ${Math.round(t.savedEmit)}g saved
+                                    ${Math.round(tripSaved)}g saved
                                 </div>`;
                 } else {
                    badgeHtml = `<div class="bg-gray-100 dark:bg-slate-900 py-1 px-2.5 rounded-lg text-[11px] font-semibold text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/50">
@@ -221,7 +247,10 @@
                                 </div>`;
                 }
                 
-                const titleLineHtml = `<div class="bg-gray-100 dark:bg-slate-900 py-1 px-2.5 rounded-lg text-[11px] font-semibold text-gray-600 dark:text-gray-300">${Math.round(t.baselineEmit)}g emitted</div>`;
+                const titleLineHtml = `<div class="bg-gray-100 dark:bg-slate-900 py-1 px-2.5 rounded-lg text-[11px] font-semibold text-gray-600 dark:text-gray-300">
+                                            ${Math.round(tripEmit)}g emitted 
+                                            ${t.passengers && t.passengers > 1 ? `<span class="opacity-60 text-gray-500 dark:text-gray-400 ml-1">(${t.passengers} pax)</span>` : ''}
+                                       </div>`;
 
                 // Calculate real array index to pass to delete function
                 const realIndex = history.length - 1 - idx;
@@ -256,6 +285,11 @@
 
             document.getElementById('totalTrips').textContent = history.length;
             document.getElementById('totalSaved').textContent = (totalSaved / 1000).toFixed(1);
+            
+            if (document.getElementById('weekSaved')) document.getElementById('weekSaved').textContent = (weekSaved / 1000).toFixed(1) + ' kg';
+            if (document.getElementById('monthSaved')) document.getElementById('monthSaved').textContent = (monthSaved / 1000).toFixed(1) + ' kg';
+            if (document.getElementById('weekTrips')) document.getElementById('weekTrips').textContent = weekCount;
+            if (document.getElementById('monthTrips')) document.getElementById('monthTrips').textContent = monthCount;
             
             // Progress bar math
             const nextMilestone = Math.ceil((totalSaved / 1000) / 10) * 10 || 10;

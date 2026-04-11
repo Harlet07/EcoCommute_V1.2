@@ -164,6 +164,17 @@
             </div>
 
             <div class="mb-6">
+                <label for="passengers"
+                    class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 block pl-2">Number of Passengers</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-primary dark:text-primary-dark font-bold text-[18px] material-symbols-outlined">group</span>
+                    <input id="passengers" type="number" min="1" value="1"
+                        class="w-full border-2 border-gray-100 dark:border-slate-700 rounded-full pl-10 pr-4 py-3.5 text-sm bg-gray-50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:border-green-400 dark:focus:border-green-500 outline-none transition-all dark:text-white"
+                        placeholder="e.g. 1" />
+                </div>
+            </div>
+
+            <div class="mb-6">
                 <label
                     class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 block pl-2">Transport
                     Mode</label>
@@ -353,10 +364,14 @@
                 btn.innerHTML = `Calculating... <span class="material-symbols-outlined text-lg animate-spin">refresh</span>`;
                 btn.disabled = true;
 
+                let passCount = parseInt(document.getElementById('passengers').value, 10);
+                if (isNaN(passCount) || passCount < 1) passCount = 1;
+
                 localStorage.origin = origin;
                 localStorage.dest = dest;
                 localStorage.selectedMain = currentMain;
                 localStorage.selectedSub = currentSub;
+                localStorage.passengers = passCount;
 
                 try {
                     const dirService = new google.maps.DirectionsService();
